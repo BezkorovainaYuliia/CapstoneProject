@@ -28,6 +28,7 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+            <sonar.organization>bezkorovainayuliia</sonar.organization>
     </properties>
     <dependencies>
         <dependency>
@@ -49,6 +50,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
