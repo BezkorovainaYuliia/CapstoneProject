@@ -4,6 +4,7 @@ import org.example.backend.model.Film;
 import org.example.backend.repository.FilmsRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
