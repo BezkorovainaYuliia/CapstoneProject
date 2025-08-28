@@ -3,26 +3,24 @@ package org.example.backend.service;
 import org.example.backend.model.Film;
 import org.example.backend.repository.FilmsRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 
+@ExtendWith(MockitoExtension.class)
 class FilmsServiceTest {
     @Mock
     private FilmsRepository filmsRepository;
 
     @InjectMocks
     private FilmsService filmsService;
-
-    public FilmsServiceTest() {
-        openMocks(this);
-    }
 
     @Test
     void getAllFilms_returnsListOfFilms() {
@@ -38,7 +36,7 @@ class FilmsServiceTest {
         List<Film> films = filmsService.getAllFilms();
 
         assertEquals(1, films.size());
-        assertEquals("Inception", films.get(0).title());
+        assertEquals("Inception", films.getFirst().title());
 
     }
 
