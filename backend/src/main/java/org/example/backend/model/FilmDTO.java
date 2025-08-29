@@ -2,16 +2,14 @@ package org.example.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.With;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
 @With
-@Document(collection = "dbFilms")
-public record Film(
-        String id,
+public record FilmDTO(
         String title,
-        @JsonFormat(pattern = "dd-MM-yyyy")
+        //!!!! i need this format to parse the date from the request body
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
         LocalDate release_date,
         double rate,
         String casts,
