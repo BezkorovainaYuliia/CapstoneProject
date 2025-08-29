@@ -1,15 +1,16 @@
 import './App.css'
+import GetAllFilms from "./components/GetAllFilms.tsx";
 
 function App() {
 
 
   return (
       <>
-          <h1 className="text-black text-3xl font-bold text-center">
-              Hello world!
-          </h1>
+
+              <GetAllFilms/>
+
       </>
-         )
+  )
 }
 
 export default App
