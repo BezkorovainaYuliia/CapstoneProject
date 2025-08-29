@@ -2,7 +2,8 @@ package org.example.backend.service;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class IdServiceTest {
     private final IdService idService = new IdService();
