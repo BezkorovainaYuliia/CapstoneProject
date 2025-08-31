@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import org.example.backend.model.Film;
+import org.example.backend.model.FilmDTO;
 import org.example.backend.repository.FilmsRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,4 +21,23 @@ public class FilmsService {
     public List<Film> getAllFilms() {
         return filmsRepository.findAll();
     }
+
+    public Film addFilm(FilmDTO filmDTO) {
+
+        if (filmDTO.title() == null || filmDTO.title().isBlank()) {
+            throw new NullPointerException("Title cannot be null or blank.");
+        }
+
+        Film newFilm = new Film(
+                idService.generateId(),
+                filmDTO.title(),
+                filmDTO.release_date(),
+                filmDTO.rate(),
+                filmDTO.casts(),
+                filmDTO.genre(),
+                filmDTO.duration()
+        );
+        return filmsRepository.save(newFilm);
+    }
+
 }

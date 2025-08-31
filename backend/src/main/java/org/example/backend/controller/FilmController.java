@@ -1,10 +1,11 @@
 package org.example.backend.controller;
 
 import org.example.backend.model.Film;
+import org.example.backend.model.FilmDTO;
 import org.example.backend.service.FilmsService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +22,10 @@ public class FilmController {
     @GetMapping("/films")
     public List<Film> getFilms() {
         return filmsService.getAllFilms();
+    }
+
+    @PostMapping("/films")
+    public ResponseEntity<Film> addFilm(@RequestBody FilmDTO filmDTO) {
+        return new ResponseEntity<>(filmsService.addFilm(filmDTO), HttpStatus.CREATED);
     }
 }
