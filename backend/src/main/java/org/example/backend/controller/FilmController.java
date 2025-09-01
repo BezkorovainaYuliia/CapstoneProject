@@ -28,4 +28,16 @@ public class FilmController {
     public ResponseEntity<Film> addFilm(@RequestBody FilmDTO filmDTO) {
         return new ResponseEntity<>(filmsService.addFilm(filmDTO), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/films/{id}")
+    public ResponseEntity<Void> deleteFilm(@PathVariable String id) {
+        filmsService.deleteFilmById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/films/{id}")
+    public ResponseEntity<Film> getFilmById(@PathVariable String id) {
+        Film film = filmsService.getFilmById(id);
+        return ResponseEntity.ok(film);
+    }
 }
