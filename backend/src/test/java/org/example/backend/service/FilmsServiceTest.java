@@ -134,9 +134,8 @@ class FilmsServiceTest {
 
         when(filmsRepository.existsById(filmId)).thenReturn(false);
 
-        ElementNotFoundExceptions ex = assertThrows(ElementNotFoundExceptions.class, () -> {
-            filmsService.deleteFilmById(filmId);
-        });
+        ElementNotFoundExceptions ex = assertThrows(ElementNotFoundExceptions.class,
+                () -> filmsService.deleteFilmById(filmId));
 
         assertEquals("Film not found: 999", ex.getMessage());
         verify(filmsRepository, never()).deleteById(anyString());
@@ -166,9 +165,8 @@ class FilmsServiceTest {
 
         when(filmsRepository.findById(filmId)).thenReturn(Optional.empty());
 
-        ElementNotFoundExceptions ex = assertThrows(ElementNotFoundExceptions.class, () -> {
-            filmsService.getFilmById(filmId);
-        });
+        ElementNotFoundExceptions ex = assertThrows(ElementNotFoundExceptions.class,
+                () -> filmsService.getFilmById(filmId));
 
         assertEquals("Film not found: 999", ex.getMessage());
 
