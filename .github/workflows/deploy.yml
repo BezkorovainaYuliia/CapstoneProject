@@ -52,11 +52,11 @@ jobs:
       - name: Build Backend mit Maven
         run: mvn -B package --file backend/pom.xml
 
-      - name: Upload App.jar
+      - name: Upload Filmbd.jar
         uses: actions/upload-artifact@v4
         with:
           name: 'backend-artifact'
-          path: 'backend/target/app.jar'
+          path: 'backend/target/filmdb.jar'
 
 
   push-to-docker-hub:
