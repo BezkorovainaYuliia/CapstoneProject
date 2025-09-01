@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import org.example.backend.exceptions.ElementNotFoundExceptions;
 import org.example.backend.model.Film;
 import org.example.backend.model.FilmDTO;
 import org.example.backend.model.GENRE;
@@ -12,10 +13,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -114,6 +115,62 @@ class FilmsServiceTest {
 
         assertThrows(NullPointerException.class, () -> filmsService.addFilm(filmDTO));
         verifyNoInteractions(filmsRepository);
+    }
+
+    @Test
+    void deleteFilmById_existingFilm_deletesSuccessfully() {
+        String filmId = "123";
+
+        when(filmsRepository.existsById(filmId)).thenReturn(true);
+
+        filmsService.deleteFilmById(filmId);
+
+        verify(filmsRepository).deleteById(filmId);
+    }
+
+    @Test
+    void deleteFilmById_nonExistingFilm_throwsException() {
+        String filmId = "999";
+
+        when(filmsRepository.existsById(filmId)).thenReturn(false);
+
+        ElementNotFoundExceptions ex = assertThrows(ElementNotFoundExceptions.class,
+                () -> filmsService.deleteFilmById(filmId));
+
+        assertEquals("Film not found: 999", ex.getMessage());
+        verify(filmsRepository, never()).deleteById(anyString());
+    }
+
+
+    @Test
+    void getFilmById_existingFilm_returnsFilm() {
+        String filmId = "123";
+        Film film = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+
+        when(filmsRepository.findById(filmId)).thenReturn(Optional.of(film));
+
+        Film result = filmsService.getFilmById(filmId);
+
+        assertNotNull(result);
+        assertEquals(filmId, result.id());
+        assertEquals("Inception", result.title());
+
+        verify(filmsRepository, times(1)).findById(filmId);
+    }
+
+    @Test
+    void getFilmById_nonExistingFilm_throwsException() {
+        String filmId = "999";
+
+        when(filmsRepository.findById(filmId)).thenReturn(Optional.empty());
+
+        ElementNotFoundExceptions ex = assertThrows(ElementNotFoundExceptions.class,
+                () -> filmsService.getFilmById(filmId));
+
+        assertEquals("Film not found: 999", ex.getMessage());
+
+        verify(filmsRepository, times(1)).findById(filmId);
     }
 
 }

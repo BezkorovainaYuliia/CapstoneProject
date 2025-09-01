@@ -20,9 +20,9 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -58,8 +58,6 @@ class FilmControllerTest {
                 148
         );
 
-        System.out.println(filmDTO);
-
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); //!!!!! Support for Java 8 date/time types
         String filmJson = objectMapper.writeValueAsString(filmDTO);
@@ -78,5 +76,51 @@ class FilmControllerTest {
         assertThat(saved.get().title()).isEqualTo("Inception");
         assertThat(saved.get().genre()).isEqualTo(GENRE.SCI_FI);
     }
+
+    @Test
+    void deleteFilm_existingId_returnsNoContent() throws Exception {
+        Film film = new Film(
+                "123",
+                "Inception",
+                LocalDate.of(2010, 7, 16),
+                8.8,
+                "Leonardo DiCaprio",
+                GENRE.SCI_FI,
+                148
+        );
+        filmsRepository.save(film);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/films/{id}", "123"))
+                .andExpect(status().isNoContent());
+
+        boolean exists = filmsRepository.existsById("123");
+        assertFalse(exists);
+    }
+
+    @Test
+    void deleteFilm_nonExistingId_returnsNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/films/{id}", "999"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getFilmById_existingId_returnsFilm() throws Exception {
+
+        Film film = new Film("123", "Inception", LocalDate.of(2010,7,16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+        filmsRepository.save(film);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/films/{id}", "123"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("123"))
+                .andExpect(jsonPath("$.title").value("Inception"));
+    }
+
+    @Test
+    void getFilmById_nonExistingId_returnsNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/films/{id}", "999"))
+                .andExpect(status().isNotFound());
+    }
+
 
 }
