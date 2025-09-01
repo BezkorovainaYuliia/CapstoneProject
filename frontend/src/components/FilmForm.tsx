@@ -61,24 +61,32 @@ export default function FilmForm() {
             }}
             className="max-w-md mx-auto p-4 bg-white rounded shadow"
         >
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2" htmlFor="title">
-                    Title
-                </label>
+            {/* Title */}
+            <div className="relative z-0 w-full mb-5 group">
                 <input
                     type="text"
                     id="title"
                     value={film.title}
                     onChange={(e) => handleChange({ ...film, title: e.target.value })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
+                 border-0 border-b-2 border-gray-300 appearance-none
+                 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
                     required
                 />
+                <label
+                    htmlFor="title"
+                    className="absolute text-sm text-gray-500 duration-300 transform
+                 -translate-y-6 scale-75 top-3 -z-10 origin-[0]
+                 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+                 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                >
+                    Title
+                </label>
             </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2" htmlFor="release_date">
-                    Release Date
-                </label>
+            {/* Release Date */}
+            <div className="relative z-0 w-full mb-5 group">
                 <input
                     type="date"
                     id="release_date"
@@ -86,55 +94,84 @@ export default function FilmForm() {
                     onChange={(e) =>
                         handleChange({ ...film, release_date: toBackendDate(e.target.value) })
                     }
-                    className="w-full px-3 py-2 border rounded"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
+                 border-0 border-b-2 border-gray-300 appearance-none
+                 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
+                    required
                 />
+                <label
+                    htmlFor="release_date"
+                    className="absolute text-sm text-gray-500 duration-300 transform
+                 -translate-y-6 scale-75 top-3 -z-10 origin-[0]
+                 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+                 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                >
+                    Release Date
+                </label>
             </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2" htmlFor="rate">
-                    Rate
-                </label>
+            {/* Rate */}
+            <div className="relative z-0 w-full mb-5 group">
                 <input
                     type="number"
                     id="rate"
                     value={film.rate || ""}
-                    onChange={(e) =>
-                        handleChange({ ...film, rate: Number(e.target.value) })
-                    }
-                    className="w-full px-3 py-2 border rounded"
+                    onChange={(e) => handleChange({ ...film, rate: Number(e.target.value) })}
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
+                 border-0 border-b-2 border-gray-300 appearance-none
+                 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
                     min={0}
                     max={10}
                     step={0.1}
                 />
+                <label
+                    htmlFor="rate"
+                    className="absolute text-sm text-gray-500 duration-300 transform
+                 -translate-y-6 scale-75 top-3 -z-10 origin-[0]
+                 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+                 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                >
+                    Rate
+                </label>
             </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2" htmlFor="casts">
-                    Casts
-                </label>
+            {/* Casts */}
+            <div className="relative z-0 w-full mb-5 group">
                 <input
                     type="text"
                     id="casts"
                     value={film.casts || ""}
-                    onChange={(e) =>
-                        handleChange({ ...film, casts: e.target.value })
-                    }
-                    className="w-full px-3 py-2 border rounded"
+                    onChange={(e) => handleChange({ ...film, casts: e.target.value })}
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
+                 border-0 border-b-2 border-gray-300 appearance-none
+                 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
                 />
+                <label
+                    htmlFor="casts"
+                    className="absolute text-sm text-gray-500 duration-300 transform
+                 -translate-y-6 scale-75 top-3 -z-10 origin-[0]
+                 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+                 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                >
+                    Casts
+                </label>
             </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2" htmlFor="genre">
-                    Genre
-                </label>
+            {/* Genre */}
+            <div className="relative z-0 w-full mb-5 group">
                 <select
                     id="genre"
                     value={film.genre || ""}
                     onChange={(e) => handleChange({ ...film, genre: e.target.value })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
+                 border-0 border-b-2 border-gray-300 appearance-none
+                 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     required
                 >
-                    <option value="">-- Select genre --</option>
+                    <option value="" disabled hidden></option>
                     <option value="ACTION">Action</option>
                     <option value="COMEDY">Comedy</option>
                     <option value="DRAMA">Drama</option>
@@ -146,32 +183,55 @@ export default function FilmForm() {
                     <option value="ANIMATION">Animation</option>
                     <option value="FANTASY">Fantasy</option>
                 </select>
+                <label
+                    htmlFor="genre"
+                    className="absolute text-sm text-gray-500 duration-300 transform
+                 -translate-y-6 scale-75 top-3 -z-10 origin-[0]
+                 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+                 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                >
+                    Genre
+                </label>
             </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2" htmlFor="duration">
-                    Duration (minutes)
-                </label>
+            {/* Duration */}
+            <div className="relative z-0 w-full mb-5 group">
                 <input
                     type="number"
                     id="duration"
                     value={film.duration || ""}
-                    onChange={(e) =>
-                        handleChange({ ...film, duration: Number(e.target.value) })
-                    }
-                    className="w-full px-3 py-2 border rounded"
+                    onChange={(e) => handleChange({ ...film, duration: Number(e.target.value) })}
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
+                 border-0 border-b-2 border-gray-300 appearance-none
+                 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder=" "
                     min={0}
                 />
+                <label
+                    htmlFor="duration"
+                    className="absolute text-sm text-gray-500 duration-300 transform
+                 -translate-y-6 scale-75 top-3 -z-10 origin-[0]
+                 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+                 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+                >
+                    Duration (minutes)
+                </label>
             </div>
 
+            {/* Submit */}
             <button
                 type="submit"
-                className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4
+               focus:outline-none focus:ring-blue-300 font-medium rounded-lg
+               text-sm w-full px-5 py-2.5 text-center"
+            >
                 Submit
             </button>
+
             <label className="block mt-2 text-center text-gray-700 font-semibold">
                 {alerts}
             </label>
         </form>
+
     );
 }
