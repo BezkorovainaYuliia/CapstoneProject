@@ -10,9 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/free-regular-svg-icons": "^7.0.0",
+    "@fortawesome/free-solid-svg-icons": "^7.0.0",
+    "@fortawesome/react-fontawesome": "^3.0.2",
     "@tailwindcss/vite": "^4.1.12",
     "axios": "^1.11.0",
     "react": "^19.1.1",
+    "react-bootstrap-icons": "^1.11.6",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.8.2",
     "tailwindcss": "^4.1.12"
