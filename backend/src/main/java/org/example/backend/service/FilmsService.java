@@ -53,4 +53,30 @@ public class FilmsService {
                 .orElseThrow(() -> new ElementNotFoundExceptions("Film not found: " + id));
     }
 
+    public Film updateFilm(String id, FilmDTO filmDTO) {
+        Film existingFilm = filmsRepository.findById(id)
+                .orElseThrow(() -> new ElementNotFoundExceptions("Film not found: " + id));
+
+        if (filmDTO.title() != null && !filmDTO.title().isBlank()) {
+            existingFilm = existingFilm.withTitle(filmDTO.title());
+        }
+        if (filmDTO.release_date() != null) {
+            existingFilm = existingFilm.withRelease_date(filmDTO.release_date());
+        }
+        if (filmDTO.rate() != null) { 
+            existingFilm = existingFilm.withRate(filmDTO.rate());
+        }
+        if (filmDTO.casts() != null) {
+            existingFilm = existingFilm.withCasts(filmDTO.casts());
+        }
+        if (filmDTO.genre() != null) {
+            existingFilm = existingFilm.withGenre(filmDTO.genre());
+        }
+        if (filmDTO.duration() != null) {
+            existingFilm = existingFilm.withDuration(filmDTO.duration());
+        }
+
+        return filmsRepository.save(existingFilm);
+    }
+
 }

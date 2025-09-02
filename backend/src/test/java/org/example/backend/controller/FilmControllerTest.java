@@ -122,5 +122,122 @@ class FilmControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void updateFilm_existingId_returnsUpdatedFilm() throws Exception {
+        // given
+        Film film = new Film("123", "Inception", LocalDate.of(2010,7,16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+        filmsRepository.save(film);
+
+        FilmDTO updatedFilmDTO = new FilmDTO(
+                "Inception Updated",
+                LocalDate.of(2010, 7, 16),
+                9.0,
+                "Leonardo DiCaprio",
+                GENRE.SCI_FI,
+                150
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String updatedFilmJson = objectMapper.writeValueAsString(updatedFilmDTO);
+
+        // when + then
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/films/{id}", "123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedFilmJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("123"))
+                .andExpect(jsonPath("$.title").value("Inception Updated"))
+                .andExpect(jsonPath("$.rate").value(9.0))
+                .andExpect(jsonPath("$.duration").value(150));
+    }
+    @Test
+    void updateFilm_nonExistingId_returnsNotFound() throws Exception {
+        FilmDTO updatedFilmDTO = new FilmDTO(
+                "Inception Updated",
+                LocalDate.of(2010, 7, 16),
+                9.0,
+                "Leonardo DiCaprio",
+                GENRE.SCI_FI,
+                150
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String updatedFilmJson = objectMapper.writeValueAsString(updatedFilmDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/films/{id}", "999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updatedFilmJson))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void addFilm_withNullTitle_returnsBadRequest() throws Exception {
+        FilmDTO filmDTO = new FilmDTO(
+                null,
+                LocalDate.of(2010, 7, 16),
+                8.8,
+                "Leonardo DiCaprio",
+                GENRE.SCI_FI,
+                148
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String filmJson = objectMapper.writeValueAsString(filmDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/films")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(filmJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void addFilm_withBlankTitle_returnsBadRequest() throws Exception {
+        FilmDTO filmDTO = new FilmDTO(
+                "   ",
+                LocalDate.of(2010, 7, 16),
+                8.8,
+                "Leonardo DiCaprio",
+                GENRE.SCI_FI,
+                148
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String filmJson = objectMapper.writeValueAsString(filmDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/films")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(filmJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getFilms_whenNoFilms_returnsEmptyList() throws Exception {
+        mockMvc.perform(get("/api/films"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void getFilms_whenFilmsExist_returnsFilmList() throws Exception {
+        // given
+        Film film1 = new Film("1", "Inception", LocalDate.of(2010,7,16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+        Film film2 = new Film("2", "The Dark Knight", LocalDate.of(2008,7,18),
+                9.0, "Christian Bale", GENRE.ACTION, 152);
+        filmsRepository.save(film1);
+        filmsRepository.save(film2);
+
+        // when + then
+        mockMvc.perform(get("/api/films"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].title").value("Inception"))
+                .andExpect(jsonPath("$[1].title").value("The Dark Knight"));
+    }
 
 }
