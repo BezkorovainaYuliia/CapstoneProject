@@ -1,4 +1,4 @@
-name: Filmastoria Management Deployment
+name: filmastoria.onrender.com Deployment
 
 on:
   push:
@@ -26,28 +26,28 @@ jobs:
       - name: Upload Frontend-Build
         uses: actions/upload-artifact@v4
         with:
-          name: 'frontend-build'
-          path: 'frontend/dist/*'
+          name: frontend-build
+          path: frontend/dist/*
 
   build-backend:
     needs: build-frontend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Download Frontend-Build
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: backend/src/main/resources/static
 
       - name: Setup JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
-          distribution: 'temurin'    # oder 'zulu', je nach Bedarf
+          distribution: 'temurin'
           cache: 'maven'
-
-      - name: Download Frontend-Build
-        uses: actions/download-artifact@v4
-        with:
-          name: 'frontend-build'
-          path: 'backend/src/main/resources/static'
 
       - name: Build Backend mit Maven
         run: mvn -B package --file backend/pom.xml
@@ -55,21 +55,21 @@ jobs:
       - name: Upload Filmbd.jar
         uses: actions/upload-artifact@v4
         with:
-          name: 'backend-artifact'
-          path: 'backend/target/filmdb.jar'
-
+          name: app-jar
+          path: backend/target/filmdb.jar
 
   push-to-docker-hub:
     needs: build-backend
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Download Backend Artefakt
         uses: actions/download-artifact@v4
         with:
-          name: 'backend-artifact'
-          path: 'backend/target/'
+          name: app-jar
+          path: backend/target/
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -77,12 +77,11 @@ jobs:
           username: ${{secrets.DOCKER_HUB_USERNAME}}
           password: ${{secrets.DOCKER_HUB_PASSWORD}}
 
-      - name: Build and Push Backend Image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{secrets.DOCKER_IMAGE_TAG}}
+      - name: Build Docker image
+        run: docker build -t ${{secrets.DOCKER_IMAGE_TAG}} .
+
+      - name: Push Docker image
+        run: docker push ${{secrets.DOCKER_IMAGE_TAG}}
 
   deploy:
     needs: push-to-docker-hub
