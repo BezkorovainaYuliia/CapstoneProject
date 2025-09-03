@@ -63,7 +63,7 @@ public class FilmsService {
         if (filmDTO.release_date() != null) {
             existingFilm = existingFilm.withRelease_date(filmDTO.release_date());
         }
-        if (filmDTO.rate() != null) { 
+        if (filmDTO.rate() != null) {
             existingFilm = existingFilm.withRate(filmDTO.rate());
         }
         if (filmDTO.casts() != null) {

@@ -2,7 +2,7 @@ import type {Film} from "./Types.ts";
 import { useState } from "react";
 import axios from "axios";
 
-export default function FilmForm() {
+export default function AddFilmForm() {
     const [film, setFilm] = useState<Film>({
         id: "",
         title: "",
@@ -67,7 +67,7 @@ export default function FilmForm() {
                     type="text"
                     id="title"
                     value={film.title}
-                    onChange={(e) => handleChange({ ...film, title: e.target.value })}
+                    onChange={(e) => handleChange({...film, title: e.target.value})}
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
                  border-0 border-b-2 border-gray-300 appearance-none
                  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -92,7 +92,7 @@ export default function FilmForm() {
                     id="release_date"
                     value={toInputDate(film.release_date)}
                     onChange={(e) =>
-                        handleChange({ ...film, release_date: toBackendDate(e.target.value) })
+                        handleChange({...film, release_date: toBackendDate(e.target.value)})
                     }
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
                  border-0 border-b-2 border-gray-300 appearance-none
@@ -117,7 +117,7 @@ export default function FilmForm() {
                     type="number"
                     id="rate"
                     value={film.rate || ""}
-                    onChange={(e) => handleChange({ ...film, rate: Number(e.target.value) })}
+                    onChange={(e) => handleChange({...film, rate: Number(e.target.value)})}
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
                  border-0 border-b-2 border-gray-300 appearance-none
                  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -143,7 +143,7 @@ export default function FilmForm() {
                     type="text"
                     id="casts"
                     value={film.casts || ""}
-                    onChange={(e) => handleChange({ ...film, casts: e.target.value })}
+                    onChange={(e) => handleChange({...film, casts: e.target.value})}
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
                  border-0 border-b-2 border-gray-300 appearance-none
                  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -165,7 +165,7 @@ export default function FilmForm() {
                 <select
                     id="genre"
                     value={film.genre || ""}
-                    onChange={(e) => handleChange({ ...film, genre: e.target.value })}
+                    onChange={(e) => handleChange({...film, genre: e.target.value})}
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
                  border-0 border-b-2 border-gray-300 appearance-none
                  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -200,7 +200,7 @@ export default function FilmForm() {
                     type="number"
                     id="duration"
                     value={film.duration || ""}
-                    onChange={(e) => handleChange({ ...film, duration: Number(e.target.value) })}
+                    onChange={(e) => handleChange({...film, duration: Number(e.target.value)})}
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
                  border-0 border-b-2 border-gray-300 appearance-none
                  focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -219,19 +219,26 @@ export default function FilmForm() {
             </div>
 
             {/* Submit */}
-            <button
-                type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4
+            <div className="flex justify-end">
+                <button
+                    type="submit"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4
                focus:outline-none focus:ring-blue-300 font-medium rounded-lg
-               text-sm w-full px-5 py-2.5 text-center"
-            >
-                Submit
-            </button>
+               text-sm px-5 py-2.5 text-center"
+                >
+                    <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                              d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
+                    </svg>
 
-            <label className="block mt-2 text-center text-gray-700 font-semibold">
-                {alerts}
-            </label>
+                </button>
+            </div>
+
+                <label className="block mt-2 text-center text-gray-700 font-semibold">
+                    {alerts}
+                </label>
         </form>
 
-    );
+);
 }
