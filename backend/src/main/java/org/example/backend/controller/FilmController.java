@@ -40,4 +40,10 @@ public class FilmController {
         Film film = filmsService.getFilmById(id);
         return ResponseEntity.ok(film);
     }
+
+    @PutMapping("/films/{id}")
+    public ResponseEntity<Film> updateFilm(@PathVariable String id, @RequestBody FilmDTO filmDTO) {
+        Film updatedFilm = filmsService.updateFilm(id, filmDTO);
+        return ResponseEntity.ok(updatedFilm);
+    }
 }

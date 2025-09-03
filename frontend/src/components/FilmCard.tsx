@@ -1,5 +1,6 @@
 import type { Film } from "./Types.ts";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 type FilmCardProps = {
     film: Film;
@@ -7,6 +8,8 @@ type FilmCardProps = {
 };
 
 export default function FilmCard({ film, onDelete }: Readonly<FilmCardProps>) {
+    const navigate = useNavigate();
+
     function deleteHandler(filmId: string) {
         console.log("Deleting film ID:", filmId);
             axios
@@ -33,14 +36,18 @@ export default function FilmCard({ film, onDelete }: Readonly<FilmCardProps>) {
             </div>
 
             <div className="flex justify-end gap-2 mt-4">
-                <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                    <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor"
-                              d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
-                    </svg>
 
-                </button>
+                    <button
+                        className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                        onClick={() => navigate(`/edit/${film.id}`)}
+                    >
+                        <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor"
+                                  d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
+                        </svg>
+                    </button>
+
 
                 <button className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
                     <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"

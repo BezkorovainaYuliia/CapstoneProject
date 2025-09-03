@@ -13,8 +13,8 @@ public record Film(
         String title,
         @JsonFormat(pattern = "dd-MM-yyyy")
         LocalDate release_date,
-        double rate,
+        Double rate,
         String casts,
         GENRE genre,
-        int duration) {
+        Integer duration) {
 }
