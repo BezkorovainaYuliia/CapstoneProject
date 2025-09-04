@@ -17,6 +17,8 @@ public class SecurityConfig {
 
     @Value("${app.url}")
     private String appUrl;
+    @Value("${app.cors.allowed-origins}")
+    private String corsLinks;
 
 
     @Bean
@@ -38,7 +40,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(appUrl)
+                        .allowedOrigins(corsLinks)
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
             }
         };
