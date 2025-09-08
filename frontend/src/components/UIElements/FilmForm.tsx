@@ -1,5 +1,6 @@
-// FilmForm.tsx
-import type { Film } from "./Types.ts";
+import type { Film } from "../Types.ts";
+import SaveIcon from "../icons/SaveIcon.tsx";
+import CancelIcon from "../icons/CancelIcon.tsx";
 
 type Props = {
     film: Film;
@@ -200,14 +201,10 @@ export default function FilmForm({
              focus:outline-none focus:ring-blue-300 font-medium rounded-lg
              text-sm px-5 py-2.5 text-center"
                 >
-                    <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                              d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
-                    </svg>
+                    <SaveIcon />
                 </button>
 
-                {onCancel && (
+
                     <button
                         type="button"
                         onClick={onCancel}
@@ -216,13 +213,8 @@ export default function FilmForm({
              text-sm px-5 py-2.5 text-center"
                     >
                         {/*Cancel*/}
-                        <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                  d="M6 18 17.94 6M18 18 6.06 6"/>
-                        </svg>
+                       <CancelIcon />
                     </button>
-                )}
 
             </div>
         </form>

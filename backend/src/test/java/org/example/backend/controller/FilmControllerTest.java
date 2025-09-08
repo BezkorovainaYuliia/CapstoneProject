@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureMockR
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -21,12 +22,14 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureMockRestServiceServer
+@WithMockUser(username = "testuser")
 class FilmControllerTest {
 
     @Autowired
@@ -64,6 +67,7 @@ class FilmControllerTest {
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/films")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(filmJson))
                 .andExpect(status().isCreated())
@@ -89,17 +93,18 @@ class FilmControllerTest {
                 148
         );
         filmsRepository.save(film);
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/films/{id}", "123"))
+        // when + then
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/films/{id}", "123")
+                        .with(csrf()))
                 .andExpect(status().isNoContent());
-
         boolean exists = filmsRepository.existsById("123");
         assertFalse(exists);
     }
 
     @Test
     void deleteFilm_nonExistingId_returnsNotFound() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/films/{id}", "999"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/films/{id}", "999")
+                        .with(csrf()))
                 .andExpect(status().isNotFound());
     }
 
@@ -144,6 +149,7 @@ class FilmControllerTest {
 
         // when + then
         mockMvc.perform(MockMvcRequestBuilders.put("/api/films/{id}", "123")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedFilmJson))
                 .andExpect(status().isOk())
@@ -152,6 +158,8 @@ class FilmControllerTest {
                 .andExpect(jsonPath("$.rate").value(9.0))
                 .andExpect(jsonPath("$.duration").value(150));
     }
+
+
     @Test
     void updateFilm_nonExistingId_returnsNotFound() throws Exception {
         FilmDTO updatedFilmDTO = new FilmDTO(
@@ -168,6 +176,7 @@ class FilmControllerTest {
         String updatedFilmJson = objectMapper.writeValueAsString(updatedFilmDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/films/{id}", "999")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedFilmJson))
                 .andExpect(status().isNotFound());
@@ -189,6 +198,7 @@ class FilmControllerTest {
         String filmJson = objectMapper.writeValueAsString(filmDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/films")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(filmJson))
                 .andExpect(status().isBadRequest());
@@ -210,6 +220,7 @@ class FilmControllerTest {
         String filmJson = objectMapper.writeValueAsString(filmDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/films")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(filmJson))
                 .andExpect(status().isBadRequest());
