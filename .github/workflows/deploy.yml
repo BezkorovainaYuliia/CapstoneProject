@@ -72,7 +72,7 @@ jobs:
           path: backend/target/
 
       - name: Login to Docker Hub
-        uses: docker/login-action@2f6c983e22fd9f2af48f8eacee5e70ae8e8ed6e8
+        uses: docker/login-action@v3 #2f6c983e22fd9f2af48f8eacee5e70ae8e8ed6e8
         with:
           username: ${{secrets.DOCKER_HUB_USERNAME}}
           password: ${{secrets.DOCKER_HUB_PASSWORD}}
