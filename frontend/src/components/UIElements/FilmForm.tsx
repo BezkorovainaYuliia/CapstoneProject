@@ -1,6 +1,8 @@
 import type { Film } from "../Types.ts";
 import SaveIcon from "../icons/SaveIcon.tsx";
 import CancelIcon from "../icons/CancelIcon.tsx";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 type Props = {
     film: Film;
@@ -27,6 +29,14 @@ export default function FilmForm({
                                      onSubmit,
                                      onCancel,
                                  }: Readonly<Props>) {
+
+    const [genres, setGenres] = useState<string[]>([]);
+
+    useEffect(() => {
+        axios.get("/api/genres", { withCredentials: true })
+            .then(res => setGenres(res.data));
+    }, []);
+
     return (
         <form
             onSubmit={(e) => {
@@ -133,38 +143,35 @@ export default function FilmForm({
             </div>
 
             {/* Genre */}
+            {/* Genre */}
             <div className="relative z-0 w-full mb-5 group">
                 <select
                     id="genre"
                     value={film.genre || ""}
                     onChange={(e) => onChange({ ...film, genre: e.target.value })}
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent
-             border-0 border-b-2 border-gray-300 appearance-none
-             focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+       border-0 border-b-2 border-gray-300 appearance-none
+       focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     required
                 >
-                    <option value="" disabled hidden></option>
-                    <option value="ACTION">Action</option>
-                    <option value="COMEDY">Comedy</option>
-                    <option value="DRAMA">Drama</option>
-                    <option value="HORROR">Horror</option>
-                    <option value="ROMANCE">Romance</option>
-                    <option value="SCI_FI">Sci-Fi</option>
-                    <option value="DOCUMENTARY">Documentary</option>
-                    <option value="THRILLER">Thriller</option>
-                    <option value="ANIMATION">Animation</option>
-                    <option value="FANTASY">Fantasy</option>
+                    <option value="" disabled hidden />
+                    {genres.map((g) => (
+                        <option key={g} value={g}>
+                            {g.replace("_", " ")}
+                        </option>
+                    ))}
                 </select>
                 <label
                     htmlFor="genre"
                     className="absolute text-sm text-gray-500 duration-300 transform
-             -translate-y-6 scale-75 top-3 -z-10 origin-[0]
-             peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
-             peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
+       -translate-y-6 scale-75 top-3 -z-10 origin-[0]
+       peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0
+       peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
                 >
                     Genre
                 </label>
             </div>
+
 
             {/* Duration */}
             <div className="relative z-0 w-full mb-5 group">
