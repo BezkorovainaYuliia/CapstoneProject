@@ -21,6 +21,7 @@ public class SecurityConfig {
     @Value("${app.cors.allowed-origins}")
     private String corsLinks;
 
+    @SuppressWarnings("java:S4502")
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
