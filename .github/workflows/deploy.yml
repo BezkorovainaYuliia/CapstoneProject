@@ -72,21 +72,32 @@ jobs:
           path: backend/target/
 
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@2f6c983e22fd9f2af48f8eacee5e70ae8e8ed6e8
         with:
           username: ${{secrets.DOCKER_HUB_USERNAME}}
           password: ${{secrets.DOCKER_HUB_PASSWORD}}
 
       - name: Build Docker image
-        run: docker build -t ${{secrets.DOCKER_IMAGE_TAG}} .
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          APP_CORS_LINKS: ${{ secrets.APP_CORS_LINKS }}
+          DOCKER_IMAGE_TAG: ${{ secrets.DOCKER_IMAGE_TAG }}
+        run: |
+          docker build \
+            --build-arg APP_URL=$APP_URL \
+            --build-arg APP_CORS_LINKS=$APP_CORS_LINKS \
+            -t $DOCKER_IMAGE_TAG .
 
       - name: Push Docker image
-        run: docker push ${{secrets.DOCKER_IMAGE_TAG}}
+        env:
+          DOCKER_IMAGE_TAG: ${{ secrets.DOCKER_IMAGE_TAG }}
+        run: docker push $DOCKER_IMAGE_TAG
 
   deploy:
     needs: push-to-docker-hub
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Render Deployment
-        run: |
-          curl -X POST ${{secrets.RENDER_DEPLOY_HOOK}}
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: curl -X POST "$RENDER_DEPLOY_HOOK"
