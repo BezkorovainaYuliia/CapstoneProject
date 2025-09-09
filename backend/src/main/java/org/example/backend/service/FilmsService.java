@@ -36,7 +36,8 @@ public class FilmsService {
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
-                filmDTO.duration()
+                filmDTO.duration(),
+                filmDTO.poster()
         );
         return filmsRepository.save(newFilm);
     }
