@@ -6,4 +6,5 @@ export type Film = {
     casts: string;
     genre: string;
     duration: number;
+    poster: string;
 }

@@ -8,6 +8,7 @@ import Menu from "./components/Menu.tsx";
 import AddFilm from "./components/AddFilm.tsx";
 import EditFilm from "./components/EditFilm.tsx";
 import ProtectedRoute from "./components/ProtectedRoutes.tsx";
+import ViewFilm from "./components/FilmView.tsx";
 
 const images = [
     { id: "amazon", src: "https://m.media-amazon.com/images/G/01/AdProductsWebsite/images/campaigns/primeVideo/PV_titleScreens_16Shows._TTW_.jpeg", alt: "Amazon" },
@@ -99,8 +100,14 @@ function App() {
                             <EditFilm />
                         </ProtectedRoute>
                     } />
-                </Routes>
+                    {/* View Film */}
+                    <Route path="/films/:id" element={
+                        <ProtectedRoute user={user}>
+                            <ViewFilm />
+                        </ProtectedRoute>
+                    } />
 
+                </Routes>
             </div>
             }
         </>
