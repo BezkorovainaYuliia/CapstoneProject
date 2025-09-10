@@ -16,5 +16,5 @@ export default function ViewFilm() {
 
     if (!film) return <p>Loading...</p>;
 
-    return <FilmForm film={film} onChange={() => {}} onSubmit={() => {}} readonly />;
+    return <FilmForm film={film} onSubmit={() => {}} readonly />;
 }
