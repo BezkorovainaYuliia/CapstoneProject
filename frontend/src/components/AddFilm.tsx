@@ -19,13 +19,14 @@ export default function AddFilm() {
     });
     const navigator = useNavigate();
 
-    const handleSubmit = () => {
-        axios.post("/api/films", film, { withCredentials: true})
+    const handleSubmit = (newFilm: Film) => {
+        axios.post("/api/films", newFilm, { withCredentials: true })
             .then(() => {
                 handleCancel();
             })
             .catch(err => console.error("Error saving film:", err));
     };
+
 
     const handleCancel = () => {
         setFilm({
@@ -46,7 +47,6 @@ export default function AddFilm() {
 
         <FilmForm
             film={film}
-            onChange={setFilm}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
         />
