@@ -58,7 +58,8 @@ class FilmControllerTest {
                 8.8,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                148
+                148,
+                "https://example.com/inception.jpg"
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -90,7 +91,8 @@ class FilmControllerTest {
                 8.8,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                148
+                148,
+                "https://example.com/inception.jpg"
         );
         filmsRepository.save(film);
         // when + then
@@ -112,7 +114,7 @@ class FilmControllerTest {
     void getFilmById_existingId_returnsFilm() throws Exception {
 
         Film film = new Film("123", "Inception", LocalDate.of(2010,7,16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
         filmsRepository.save(film);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/films/{id}", "123"))
@@ -131,7 +133,7 @@ class FilmControllerTest {
     void updateFilm_existingId_returnsUpdatedFilm() throws Exception {
         // given
         Film film = new Film("123", "Inception", LocalDate.of(2010,7,16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
         filmsRepository.save(film);
 
         FilmDTO updatedFilmDTO = new FilmDTO(
@@ -140,7 +142,8 @@ class FilmControllerTest {
                 9.0,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                150
+                150,
+                "https://example.com/inception_updated.jpg"
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -168,7 +171,8 @@ class FilmControllerTest {
                 9.0,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                150
+                150,
+                "https://example.com/inception_updated.jpg"
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -190,7 +194,8 @@ class FilmControllerTest {
                 8.8,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                148
+                148,
+                "https://example.com/inception.jpg"
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -212,7 +217,8 @@ class FilmControllerTest {
                 8.8,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                148
+                148,
+                "https://example.com/inception.jpg"
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -237,9 +243,9 @@ class FilmControllerTest {
     void getFilms_whenFilmsExist_returnsFilmList() throws Exception {
         // given
         Film film1 = new Film("1", "Inception", LocalDate.of(2010,7,16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
         Film film2 = new Film("2", "The Dark Knight", LocalDate.of(2008,7,18),
-                9.0, "Christian Bale", GENRE.ACTION, 152);
+                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg");
         filmsRepository.save(film1);
         filmsRepository.save(film2);
 

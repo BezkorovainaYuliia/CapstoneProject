@@ -38,7 +38,8 @@ class FilmsServiceTest {
                 8.8,
                 "Leonardo DiCaprio, Joseph Gordon-Levitt",
                 GENRE.SCI_FI,
-                148);
+                148,
+                "https://example.com/inception.jpg");
 
         when(filmsRepository.findAll()).thenReturn(List.of(film));
 
@@ -58,7 +59,8 @@ class FilmsServiceTest {
                 8.8,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                148
+                148,
+                "https://example.com/inception.jpg"
         );
 
         when(idService.generateId()).thenReturn("123");
@@ -70,7 +72,8 @@ class FilmsServiceTest {
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
-                filmDTO.duration()
+                filmDTO.duration(),
+                filmDTO.poster()
         );
 
         when(filmsRepository.save(any(Film.class))).thenReturn(savedFilm);
@@ -95,7 +98,8 @@ class FilmsServiceTest {
                 8.8,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                148
+                148,
+                "https://example.com/inception.jpg"
         );
 
         assertThrows(NullPointerException.class, () -> filmsService.addFilm(filmDTO));
@@ -110,7 +114,8 @@ class FilmsServiceTest {
                 8.8,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                148
+                148,
+                "https://example.com/inception.jpg"
         );
 
         assertThrows(NullPointerException.class, () -> filmsService.addFilm(filmDTO));
@@ -146,7 +151,7 @@ class FilmsServiceTest {
     void getFilmById_existingFilm_returnsFilm() {
         String filmId = "123";
         Film film = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
 
         when(filmsRepository.findById(filmId)).thenReturn(Optional.of(film));
 
@@ -177,7 +182,7 @@ class FilmsServiceTest {
     void updateFilm_existingFilm_updatesAndReturnsFilm() {
         String filmId = "123";
         Film existingFilm = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
 
         FilmDTO filmDTO = new FilmDTO(
                 "Inception Updated",
@@ -185,7 +190,8 @@ class FilmsServiceTest {
                 9.0,
                 "Leonardo DiCaprio, Joseph Gordon-Levitt",
                 GENRE.SCI_FI,
-                150
+                150,
+                "https://example.com/inception-updated.jpg"
         );
 
         when(filmsRepository.findById(filmId)).thenReturn(Optional.of(existingFilm));
@@ -197,7 +203,8 @@ class FilmsServiceTest {
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
-                filmDTO.duration()
+                filmDTO.duration(),
+                filmDTO.poster()
         );
 
         when(filmsRepository.save(any(Film.class))).thenReturn(updatedFilm);
@@ -223,7 +230,8 @@ class FilmsServiceTest {
                 9.0,
                 "Leonardo DiCaprio, Joseph Gordon-Levitt",
                 GENRE.SCI_FI,
-                150
+                150,
+                "https://example.com/inception-updated.jpg"
         );
         when(filmsRepository.findById(filmId)).thenReturn(Optional.empty());
         ElementNotFoundExceptions ex = assertThrows(ElementNotFoundExceptions.class,
@@ -237,7 +245,7 @@ class FilmsServiceTest {
     void updateFilm_existingFilmWithPartialDTO_updatesAndReturnsFilm() {
         String filmId = "123";
         Film existingFilm = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
 
         FilmDTO filmDTO = new FilmDTO(
                 null,
@@ -245,7 +253,8 @@ class FilmsServiceTest {
                 9.0,
                 null,
                 null,
-                150
+                150,
+                null
         );
 
         when(filmsRepository.findById(filmId)).thenReturn(Optional.of(existingFilm));
@@ -257,7 +266,8 @@ class FilmsServiceTest {
                 9.0,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                150
+                150,
+                "https://example.com/inception.jpg"
         );
 
         when(filmsRepository.save(any(Film.class))).thenReturn(updatedFilm);
@@ -278,7 +288,7 @@ class FilmsServiceTest {
     void updateFilm_existingFilmWithBlankTitleInDTO_doesNotUpdateTitle() {
         String filmId = "123";
         Film existingFilm = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
 
         FilmDTO filmDTO = new FilmDTO(
                 "   ",
@@ -286,7 +296,8 @@ class FilmsServiceTest {
                 9.0,
                 null,
                 null,
-                150
+                150,
+                null
         );
 
         when(filmsRepository.findById(filmId)).thenReturn(Optional.of(existingFilm));
@@ -298,7 +309,8 @@ class FilmsServiceTest {
                 9.0,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                150
+                150,
+                "https://example.com/inception.jpg"
         );
 
         when(filmsRepository.save(any(Film.class))).thenReturn(updatedFilm);
@@ -341,7 +353,8 @@ class FilmsServiceTest {
                 8.8,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                148
+                148,
+                "https://example.com/inception.jpg"
         );
 
         when(idService.generateId()).thenReturn("123");
@@ -366,7 +379,7 @@ class FilmsServiceTest {
     void updateFilm_whenRepositoryThrowsException_propagatesException() {
         String filmId = "123";
         Film existingFilm = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
 
         FilmDTO filmDTO = new FilmDTO(
                 "Inception Updated",
@@ -374,7 +387,8 @@ class FilmsServiceTest {
                 9.0,
                 "Leonardo DiCaprio, Joseph Gordon-Levitt",
                 GENRE.SCI_FI,
-                150
+                150,
+                "https://example.com/inception-updated.jpg"
         );
 
         when(filmsRepository.findById(filmId)).thenReturn(Optional.of(existingFilm));
@@ -403,7 +417,8 @@ class FilmsServiceTest {
                 null,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                148
+                148,
+                "https://example.com/inception.jpg"
         );
 
         when(idService.generateId()).thenReturn("123");
@@ -415,7 +430,8 @@ class FilmsServiceTest {
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
-                filmDTO.duration()
+                filmDTO.duration(),
+                filmDTO.poster()
         );
 
         when(filmsRepository.save(any(Film.class))).thenReturn(savedFilm);
@@ -441,7 +457,8 @@ class FilmsServiceTest {
                 8.8,
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
-                null
+                null,
+                "https://example.com/inception.jpg"
         );
 
         when(idService.generateId()).thenReturn("123");
@@ -453,7 +470,8 @@ class FilmsServiceTest {
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
-                filmDTO.duration()
+                filmDTO.duration(),
+                filmDTO.poster()
         );
 
         when(filmsRepository.save(any(Film.class))).thenReturn(savedFilm);
@@ -474,7 +492,7 @@ class FilmsServiceTest {
     void updateFilm_whenRateAndDurationAreNull_updatesFilmSuccessfully() {
         String filmId = "123";
         Film existingFilm = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
 
         FilmDTO filmDTO = new FilmDTO(
                 "Inception Updated",
@@ -482,7 +500,8 @@ class FilmsServiceTest {
                 null,
                 "Leonardo DiCaprio, Joseph Gordon-Levitt",
                 GENRE.SCI_FI,
-                null
+                null,
+                "https://example.com/inception-updated.jpg"
         );
 
         when(filmsRepository.findById(filmId)).thenReturn(Optional.of(existingFilm));
@@ -491,10 +510,11 @@ class FilmsServiceTest {
                 filmId,
                 filmDTO.title(),
                 filmDTO.release_date(),
-                existingFilm.rate(), // rate remains unchanged
+                existingFilm.rate(), // !!! rate remains unchanged
                 filmDTO.casts(),
                 filmDTO.genre(),
-                existingFilm.duration() // duration remains unchanged
+                existingFilm.duration(), // !!! duration remains unchanged
+                filmDTO.poster()
         );
 
         when(filmsRepository.save(any(Film.class))).thenReturn(updatedFilm);
@@ -515,9 +535,10 @@ class FilmsServiceTest {
     void updateFilm_whenAllFieldsInDTOAreNull_doesNotUpdateAnyField() {
         String filmId = "123";
         Film existingFilm = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148);
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
 
         FilmDTO filmDTO = new FilmDTO(
+                null,
                 null,
                 null,
                 null,

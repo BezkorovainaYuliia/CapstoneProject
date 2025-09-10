@@ -16,5 +16,6 @@ public record Film(
         Double rate,
         String casts,
         GENRE genre,
-        Integer duration) {
+        Integer duration,
+        String poster) {
 }
