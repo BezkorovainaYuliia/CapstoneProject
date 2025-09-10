@@ -12,14 +12,16 @@ export default function EditFilm() {
     useEffect(() => {
         console.log(id);
         if (id) {
-            axios.get(`/api/films/${id}`, { withCredentials: true }).then(res => setFilm(res.data));
+            axios.get(`/api/films/${id}`, { withCredentials: true })
+                .then(res => setFilm(res.data))
+                .catch(err => console.error(err));
         }
     }, [id]);
 
     if (!film) return <div>Loading...</div>;
 
-    const handleSubmit = () => {
-        axios.put(`/api/films/${film.id}`, film, { withCredentials: true })
+    const handleSubmit = (updatedFilm: Film) => {
+        axios.put(`/api/films/${updatedFilm.id}`, updatedFilm, { withCredentials: true })
             .then(() => navigate("/films"))
             .catch(err => console.error("Error updating film:", err));
     };
@@ -27,9 +29,9 @@ export default function EditFilm() {
     return (
         <FilmForm
             film={film}
-            onChange={setFilm}
             onSubmit={handleSubmit}
             onCancel={() => navigate("/")}
+            readonly={false}
         />
     );
 }
