@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureMockR
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -68,7 +69,7 @@ class FilmControllerTest {
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/films")
-                        .with(csrf())
+                       // .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(filmJson))
                 .andExpect(status().isCreated())
@@ -97,7 +98,8 @@ class FilmControllerTest {
         filmsRepository.save(film);
         // when + then
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/films/{id}", "123")
-                        .with(csrf()))
+                        //.with(csrf())
+                )
                 .andExpect(status().isNoContent());
         boolean exists = filmsRepository.existsById("123");
         assertFalse(exists);
@@ -106,7 +108,8 @@ class FilmControllerTest {
     @Test
     void deleteFilm_nonExistingId_returnsNotFound() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/films/{id}", "999")
-                        .with(csrf()))
+                        //.with(csrf())
+                )
                 .andExpect(status().isNotFound());
     }
 
@@ -152,7 +155,7 @@ class FilmControllerTest {
 
         // when + then
         mockMvc.perform(MockMvcRequestBuilders.put("/api/films/{id}", "123")
-                        .with(csrf())
+                        //.with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedFilmJson))
                 .andExpect(status().isOk())
@@ -180,7 +183,7 @@ class FilmControllerTest {
         String updatedFilmJson = objectMapper.writeValueAsString(updatedFilmDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/films/{id}", "999")
-                        .with(csrf())
+                       // .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedFilmJson))
                 .andExpect(status().isNotFound());
@@ -203,7 +206,7 @@ class FilmControllerTest {
         String filmJson = objectMapper.writeValueAsString(filmDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/films")
-                        .with(csrf())
+                       // .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(filmJson))
                 .andExpect(status().isBadRequest());
@@ -226,7 +229,7 @@ class FilmControllerTest {
         String filmJson = objectMapper.writeValueAsString(filmDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/films")
-                        .with(csrf())
+                        //.with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(filmJson))
                 .andExpect(status().isBadRequest());
@@ -234,7 +237,7 @@ class FilmControllerTest {
 
     @Test
     void getFilms_whenNoFilms_returnsEmptyList() throws Exception {
-        mockMvc.perform(get("/api/films"))
+        mockMvc.perform(get("/api/films").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
@@ -257,4 +260,96 @@ class FilmControllerTest {
                 .andExpect(jsonPath("$[1].title").value("The Dark Knight"));
     }
 
+    @Test
+    void getFilmsByFilter_withYear_withGenre_withRate_returnsFilteredFilms() throws Exception {
+        // given
+        Film film1 = new Film("1", "Inception", LocalDate.of(2010,7,16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+        Film film2 = new Film("2", "The Dark Knight", LocalDate.of(2008,7,18),
+                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg");
+        filmsRepository.save(film1);
+        filmsRepository.save(film2);
+
+        // when + then
+        mockMvc.perform(get("/api/films/filter")
+                        .param("year", "2010"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].title").value("Inception"));
+
+        mockMvc.perform(get("/api/films/filter")
+                        .param("genre", "ACTION"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].title").value("The Dark Knight"));
+
+        mockMvc.perform(get("/api/films/filter")
+                        .param("rate", "9.0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].title").value("The Dark Knight"));
+    }
+
+    @Test
+    void getFilmsByFilter_withNoParams_returnsAllFilms() throws Exception {
+        // given
+        Film film1 = new Film("1", "Inception", LocalDate.of(2010,7,16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+        Film film2 = new Film("2", "The Dark Knight", LocalDate.of(2008,7,18),
+                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg");
+        filmsRepository.save(film1);
+        filmsRepository.save(film2);
+
+        // when + then
+        mockMvc.perform(get("/api/films/filter"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    @WithAnonymousUser
+    void getFilms_withoutAuthentication_returnsUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/films").with(request -> {
+                    request.setRemoteUser(null);
+                    return request;
+                }))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void getFilms_withoutAuthentication2_returnsUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/films"))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    @Test
+    void filterFilms_withInvalidGenre_returnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/films/filter")
+                        .param("genre", "INVALID_GENRE"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void filterFilms_withInvalidYear_returnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/films/filter")
+                        .param("year", "1800"))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(get("/api/films/filter")
+                        .param("year", "3000"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void filterFilms_withInvalidRate_returnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/films/filter")
+                        .param("rate", "-1.0"))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(get("/api/films/filter")
+                        .param("rate", "11.0"))
+                .andExpect(status().isBadRequest());
+    }
 }
