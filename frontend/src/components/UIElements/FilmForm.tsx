@@ -53,7 +53,7 @@ export default function FilmForm({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit(formData); // передаємо актуальні дані
+        onSubmit(formData);
         setIsEditing(false);
     };
 

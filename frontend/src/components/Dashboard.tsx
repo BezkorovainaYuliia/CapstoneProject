@@ -5,13 +5,54 @@ import FilmCard from "./FilmCard.tsx";
 
 export default function Dashboard() {
     const [films, setFilms] = useState<Film[]>([]);
+    const [genres, setGenres] = useState<string[]>([]);
+    const [year, setYear] = useState<string>("");
+    const [genre, setGenre] = useState<string>("");
+    const [rate, setRate] = useState<string>("");
 
-    function loadFilms() {
+    const isValidYear = (value: string) => {
+        if (!/^\d*$/.test(value)) return false; // дозволяємо будь-яку кількість цифр, або пусте поле
+        if (value.length === 4) {               // перевірка мінімального року тільки коли введено 4 цифри
+            const y = parseInt(value, 10);
+            return y >= 1888;
+        }
+        return true; // поки користувач вводить рік, дозволяємо
+    };
+
+    const isValidRate = (value: string) => {
+        if (!/^\d+(\.\d+)?$/.test(value)) return false;
+        const r = parseFloat(value);
+        return r >= 0 && r <= 10;
+    };
+
+    // Завантаження фільмів
+    const loadFilms = () => {
         axios
             .get<Film[]>("/api/films", { withCredentials: true })
             .then((res) => setFilms(res.data))
             .catch((err) => console.error(err));
-    }
+    };
+
+    // Завантаження жанрів
+    useEffect(() => {
+        axios
+            .get("/api/genres", { withCredentials: true })
+            .then((res) => setGenres(res.data))
+            .catch((err) => console.error("Error fetching genres:", err));
+    }, []);
+
+    // Фільтрація
+    const applyFilters = () => {
+        const params: Record<string, string> = {};
+        if (year) params.year = year;  // передаємо рік, якщо щось введено
+        if (genre) params.genre = genre;
+        if (rate) params.rate = rate;
+
+        axios
+            .get<Film[]>("/api/films/filter", { params, withCredentials: true })
+            .then((res) => setFilms(res.data))
+            .catch((err) => console.error(err));
+    };
 
     useEffect(() => {
         loadFilms();
@@ -19,10 +60,68 @@ export default function Dashboard() {
 
     return (
         <div className="text-3xl font-bold text-center">
+            <h1 className="text-2xl font-bold mb-4">Films</h1>
+
+            {/* Фільтри */}
+            <div className="flex justify-center gap-4 mb-6 flex-wrap">
+                <input
+                    type="text"
+                    placeholder="Year"
+                    value={year}
+                    onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "" || isValidYear(val)) setYear(val);
+                    }}
+                    className="border rounded px-2 py-1 w-24"
+                />
+
+                <select
+                    value={genre}
+                    onChange={(e) => setGenre(e.target.value)}
+                    className="border rounded px-2 py-1"
+                >
+                    <option value="">All Genres</option>
+                    {genres.map((g) => (
+                        <option key={g} value={g}>
+                            {g.replace("_", " ")}
+                        </option>
+                    ))}
+                </select>
+
+                <input
+                    type="text"
+                    placeholder="Rate"
+                    value={rate}
+                    onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "" || isValidRate(val)) setRate(val);
+                    }}
+                    className="border rounded px-2 py-1 w-24"
+                />
+
+                <button
+                    onClick={applyFilters}
+                    className="bg-blue-500 text-white px-4 py-1 rounded"
+                >
+                    Filter
+                </button>
+                <button
+                    onClick={() => {
+                        setYear("");
+                        setGenre("");
+                        setRate("");
+                        loadFilms();
+                    }}
+                    className="bg-gray-300 text-black px-4 py-1 rounded"
+                >
+                    Reset
+                </button>
+            </div>
+
+            {/* Список фільмів */}
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-8">
-                <h1 className="col-span-full text-2xl font-bold mb-4">Films</h1>
                 {films.map((film) => (
-                    <FilmCard key={film.id} film={film}/>
+                    <FilmCard key={film.id} film={film} />
                 ))}
             </div>
         </div>
