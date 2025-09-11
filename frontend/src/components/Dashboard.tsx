@@ -11,12 +11,12 @@ export default function Dashboard() {
     const [rate, setRate] = useState<string>("");
 
     const isValidYear = (value: string) => {
-        if (!/^\d*$/.test(value)) return false; // дозволяємо будь-яку кількість цифр, або пусте поле
-        if (value.length === 4) {               // перевірка мінімального року тільки коли введено 4 цифри
+        if (!/^\d*$/.test(value)) return false;
+        if (value.length === 4) {
             const y = parseInt(value, 10);
             return y >= 1888;
         }
-        return true; // поки користувач вводить рік, дозволяємо
+        return true;
     };
 
     const isValidRate = (value: string) => {
@@ -33,7 +33,7 @@ export default function Dashboard() {
             .catch((err) => console.error(err));
     };
 
-    // Завантаження жанрів
+
     useEffect(() => {
         axios
             .get("/api/genres", { withCredentials: true })
@@ -44,7 +44,7 @@ export default function Dashboard() {
     // Фільтрація
     const applyFilters = () => {
         const params: Record<string, string> = {};
-        if (year) params.year = year;  // передаємо рік, якщо щось введено
+        if (year) params.year = year;
         if (genre) params.genre = genre;
         if (rate) params.rate = rate;
 
