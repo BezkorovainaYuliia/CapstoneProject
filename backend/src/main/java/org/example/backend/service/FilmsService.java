@@ -34,7 +34,7 @@ public class FilmsService {
         Film newFilm = new Film(
                 idService.generateId(),
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -63,8 +63,8 @@ public class FilmsService {
         if (filmDTO.title() != null && !filmDTO.title().isBlank()) {
             existingFilm = existingFilm.withTitle(filmDTO.title());
         }
-        if (filmDTO.release_date() != null) {
-            existingFilm = existingFilm.withRelease_date(filmDTO.release_date());
+        if (filmDTO.releaseDate() != null) {
+            existingFilm = existingFilm.withReleaseDate(filmDTO.releaseDate());
         }
         if (filmDTO.rate() != null) {
             existingFilm = existingFilm.withRate(filmDTO.rate());
@@ -111,10 +111,21 @@ public class FilmsService {
         }
         if (year != null) {
             films = films.stream()
-                    .filter(f -> f.release_date().getYear() == year)
+                    .filter(f -> f.releaseDate().getYear() == year)
                     .toList();
         }
         return films;
     }
 
+    public List<String> getHomepageImages() {
+        LocalDate now = LocalDate.now();
+        LocalDate start = now.minusMonths(1);
+        LocalDate end = now.plusMonths(1);
+
+        List<Film> films = filmsRepository.getFilmsByReleaseDateIsBetween(start, end);
+
+        return films.stream()
+                .map(Film::poster)
+                .toList();
+    }
 }

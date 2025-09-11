@@ -56,4 +56,10 @@ public class FilmController {
         return ResponseEntity.ok(films);
     }
 
+    @GetMapping("/homepage_images")
+    public ResponseEntity<List<String>> getHomepageImages() {
+        List<String> images = filmsService.getHomepageImages();
+        return ResponseEntity.ok(images);
+    }
+
 }

@@ -12,7 +12,7 @@ public record Film(
         String id,
         String title,
         @JsonFormat(pattern = "dd-MM-yyyy")
-        LocalDate release_date,
+        LocalDate releaseDate,
         Double rate,
         String casts,
         GENRE genre,

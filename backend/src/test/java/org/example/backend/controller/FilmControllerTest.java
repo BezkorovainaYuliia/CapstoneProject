@@ -352,4 +352,49 @@ class FilmControllerTest {
                         .param("rate", "11.0"))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void getHomepageImages_returnsImageUrls() throws Exception {
+        // given
+        Film film1 = new Film("1", "Recent Movie 1", LocalDate.now().minusDays(10),
+                7.5, "Actor 1", GENRE.DRAMA, 120, "https://example.com/recent1.jpg");
+        Film film2 = new Film("2", "Recent Movie 2", LocalDate.now().plusDays(10),
+                8.0, "Actor 2", GENRE.COMEDY, 110, "https://example.com/recent2.jpg");
+        Film film3 = new Film("3", "Old Movie", LocalDate.now().minusMonths(3),
+                6.5, "Actor 3", GENRE.HORROR, 130, "https://example.com/old.jpg");
+
+        filmsRepository.save(film1);
+        filmsRepository.save(film2);
+        filmsRepository.save(film3);
+
+        // when + then
+        mockMvc.perform(get("/api/homepage_images"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0]").value("https://example.com/recent1.jpg"))
+                .andExpect(jsonPath("$[1]").value("https://example.com/recent2.jpg"));
+    }
+
+    @Test
+    void getHomepageImages_whenNoRecentFilms_returnsEmptyList() throws Exception {
+        // given
+        Film oldFilm1 = new Film("1", "Old Movie 1", LocalDate.now().minusMonths(3),
+                6.5, "Actor 1", GENRE.DRAMA, 120, "https://example.com/old1.jpg");
+        Film oldFilm2 = new Film("2", "Old Movie 2", LocalDate.now().minusMonths(4),
+                7.0, "Actor 2", GENRE.COMEDY, 110, "https://example.com/old2.jpg");
+        filmsRepository.save(oldFilm1);
+        filmsRepository.save(oldFilm2);
+
+        // when + then
+        mockMvc.perform(get("/api/homepage_images"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void getHomepageImages_whenNoFilms_returnsEmptyList() throws Exception {
+        mockMvc.perform(get("/api/homepage_images"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
 }

@@ -68,7 +68,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -199,7 +199,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -426,7 +426,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -466,7 +466,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -509,7 +509,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 existingFilm.rate(), // !!! rate remains unchanged
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -555,7 +555,7 @@ class FilmsServiceTest {
         assertNotNull(result);
         assertEquals(filmId, result.id());
         assertEquals("Inception", result.title());
-        assertEquals(LocalDate.of(2010, 7, 16), result.release_date());
+        assertEquals(LocalDate.of(2010, 7, 16), result.releaseDate());
         assertEquals(8.8, result.rate());
         assertEquals("Leonardo DiCaprio", result.casts());
         assertEquals(GENRE.SCI_FI, result.genre());
@@ -583,7 +583,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -626,7 +626,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 existingFilm.genre(), // !!! genre remains unchanged
@@ -665,7 +665,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -705,7 +705,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 existingFilm.casts(), // !!! casts remains unchanged
                 filmDTO.genre(),
@@ -740,7 +740,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -780,7 +780,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -815,7 +815,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -831,7 +831,7 @@ class FilmsServiceTest {
         // then
         assertThat(result.id()).isEqualTo("123");
         assertThat(result.title()).isEqualTo("Inception");
-        assertThat(result.release_date()).isNull();
+        assertThat(result.releaseDate()).isNull();
 
         verify(filmsRepository, times(1)).save(any(Film.class));
         verify(idService, times(1)).generateId();
@@ -854,7 +854,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                existingFilm.release_date(), // !!! release date remains unchanged
+                existingFilm.releaseDate(), // !!! release date remains unchanged
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -866,7 +866,7 @@ class FilmsServiceTest {
         assertNotNull(result);
         assertEquals(filmId, result.id());
         assertEquals("Inception Updated", result.title());
-        assertEquals(LocalDate.of(2010, 7, 16), result.release_date()); // release date should remain unchanged
+        assertEquals(LocalDate.of(2010, 7, 16), result.releaseDate()); // release date should remain unchanged
         verify(filmsRepository).findById(filmId);
         verify(filmsRepository).save(any(Film.class));
     }
@@ -889,7 +889,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -905,7 +905,7 @@ class FilmsServiceTest {
         // then
         assertThat(result.id()).isEqualTo("123");
         assertThat(result.title()).isEqualTo("Inception");
-        assertThat(result.release_date()).isNull();
+        assertThat(result.releaseDate()).isNull();
         assertThat(result.rate()).isNull();
         assertThat(result.casts()).isNull();
         assertThat(result.genre()).isNull();
@@ -965,7 +965,7 @@ class FilmsServiceTest {
 
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertTrue(result.stream().allMatch(film -> film.release_date().getYear() == year));
+        assertTrue(result.stream().allMatch(film -> film.releaseDate().getYear() == year));
 
         verify(filmsRepository).findAll();
     }
@@ -1041,7 +1041,7 @@ class FilmsServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertTrue(result.stream().allMatch(film -> film.release_date().getYear() == year));
+        assertTrue(result.stream().allMatch(film -> film.releaseDate().getYear() == year));
         assertTrue(result.stream().allMatch(film -> film.genre() == genre));
         assertTrue(result.stream().allMatch(film -> film.rate() >= rate));
 
@@ -1145,4 +1145,21 @@ class FilmsServiceTest {
         assertEquals("Film not found: null", ex.getMessage());
         verify(filmsRepository, never()).findById(anyString());
     }
+
+    @Test
+    void getHomepageImages_returnsOnlyRecentFilms() {
+        LocalDate now = LocalDate.now();
+
+        Film recentFilm = new Film("1", "Recent Movie", now.minusDays(10),
+                8.0, "Actor 1", GENRE.DRAMA, 120, "poster1.jpg");
+
+        when(filmsRepository.getFilmsByReleaseDateIsBetween(now.minusMonths(1), now.plusMonths(1)))
+                .thenReturn(List.of(recentFilm));
+
+        List<String> posters = filmsService.getHomepageImages();
+
+        assertEquals(1, posters.size());
+        assertEquals("poster1.jpg", posters.getFirst());
+    }
+
 }
