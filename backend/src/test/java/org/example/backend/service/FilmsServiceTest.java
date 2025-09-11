@@ -565,4 +565,584 @@ class FilmsServiceTest {
         verify(filmsRepository).save(any(Film.class));
     }
 
+    @Test
+    void addFilm_whenGenreIsNull_addsFilmSuccessfully() {
+        // given
+        FilmDTO filmDTO = new FilmDTO(
+                "Inception",
+                LocalDate.of(2010, 7, 16),
+                8.8,
+                "Leonardo DiCaprio",
+                null,
+                148,
+                "https://example.com/inception.jpg"
+        );
+
+        when(idService.generateId()).thenReturn("123");
+
+        Film savedFilm = new Film(
+                "123",
+                filmDTO.title(),
+                filmDTO.release_date(),
+                filmDTO.rate(),
+                filmDTO.casts(),
+                filmDTO.genre(),
+                filmDTO.duration(),
+                filmDTO.poster()
+        );
+
+        when(filmsRepository.save(any(Film.class))).thenReturn(savedFilm);
+
+        // when
+        Film result = filmsService.addFilm(filmDTO);
+
+        // then
+        assertThat(result.id()).isEqualTo("123");
+        assertThat(result.title()).isEqualTo("Inception");
+        assertThat(result.genre()).isNull();
+
+        verify(filmsRepository, times(1)).save(any(Film.class));
+        verify(idService, times(1)).generateId();
+    }
+
+    @Test
+    void updateFilm_whenGenreIsNull_updatesFilmSuccessfully() {
+        String filmId = "123";
+        Film existingFilm = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+
+        FilmDTO filmDTO = new FilmDTO(
+                "Inception Updated",
+                LocalDate.of(2010, 7, 16),
+                9.0,
+                "Leonardo DiCaprio, Joseph Gordon-Levitt",
+                null,
+                150,
+                "https://example.com/inception-updated.jpg"
+        );
+
+        when(filmsRepository.findById(filmId)).thenReturn(Optional.of(existingFilm));
+
+        Film updatedFilm = new Film(
+                filmId,
+                filmDTO.title(),
+                filmDTO.release_date(),
+                filmDTO.rate(),
+                filmDTO.casts(),
+                existingFilm.genre(), // !!! genre remains unchanged
+                filmDTO.duration(),
+                filmDTO.poster()
+        );
+
+        when(filmsRepository.save(any(Film.class))).thenReturn(updatedFilm);
+
+        Film result = filmsService.updateFilm(filmId, filmDTO);
+
+        assertNotNull(result);
+        assertEquals(filmId, result.id());
+        assertEquals("Inception Updated", result.title());
+        assertEquals(GENRE.SCI_FI, result.genre()); // genre should remain unchanged
+
+        verify(filmsRepository).findById(filmId);
+        verify(filmsRepository).save(any(Film.class));
+    }
+
+    @Test
+    void addFilm_whenCastsIsNull_addsFilmSuccessfully() {
+        // given
+        FilmDTO filmDTO = new FilmDTO(
+                "Inception",
+                LocalDate.of(2010, 7, 16),
+                8.8,
+                null,
+                GENRE.SCI_FI,
+                148,
+                "https://example.com/inception.jpg"
+        );
+
+        when(idService.generateId()).thenReturn("123");
+
+        Film savedFilm = new Film(
+                "123",
+                filmDTO.title(),
+                filmDTO.release_date(),
+                filmDTO.rate(),
+                filmDTO.casts(),
+                filmDTO.genre(),
+                filmDTO.duration(),
+                filmDTO.poster()
+        );
+
+        when(filmsRepository.save(any(Film.class))).thenReturn(savedFilm);
+
+        // when
+        Film result = filmsService.addFilm(filmDTO);
+
+        // then
+        assertThat(result.id()).isEqualTo("123");
+        assertThat(result.title()).isEqualTo("Inception");
+        assertThat(result.casts()).isNull();
+
+        verify(filmsRepository, times(1)).save(any(Film.class));
+        verify(idService, times(1)).generateId();
+    }
+
+    @Test
+    void updateFilm_whenCastsIsNull_updatesFilmSuccessfully() {
+        String filmId = "123";
+        Film existingFilm = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+        FilmDTO filmDTO = new FilmDTO(
+                "Inception Updated",
+                LocalDate.of(2010, 7, 16),
+                9.0,
+                null,
+                GENRE.SCI_FI,
+                150,
+                "https://example.com/inception-updated.jpg"
+        );
+        when(filmsRepository.findById(filmId)).thenReturn(Optional.of(existingFilm));
+        Film updatedFilm = new Film(
+                filmId,
+                filmDTO.title(),
+                filmDTO.release_date(),
+                filmDTO.rate(),
+                existingFilm.casts(), // !!! casts remains unchanged
+                filmDTO.genre(),
+                filmDTO.duration(),
+                filmDTO.poster()
+        );
+        when(filmsRepository.save(any(Film.class))).thenReturn(updatedFilm);
+        Film result = filmsService.updateFilm(filmId, filmDTO);
+        assertNotNull(result);
+        assertEquals(filmId, result.id());
+        assertEquals("Inception Updated", result.title());
+        assertEquals("Leonardo DiCaprio", result.casts()); // casts should remain unchanged
+        verify(filmsRepository).findById(filmId);
+        verify(filmsRepository).save(any(Film.class));
+    }
+
+    @Test
+    void addFilm_whenPosterIsNull_addsFilmSuccessfully() {
+        // given
+        FilmDTO filmDTO = new FilmDTO(
+                "Inception",
+                LocalDate.of(2010, 7, 16),
+                8.8,
+                "Leonardo DiCaprio",
+                GENRE.SCI_FI,
+                148,
+                null
+        );
+
+        when(idService.generateId()).thenReturn("123");
+
+        Film savedFilm = new Film(
+                "123",
+                filmDTO.title(),
+                filmDTO.release_date(),
+                filmDTO.rate(),
+                filmDTO.casts(),
+                filmDTO.genre(),
+                filmDTO.duration(),
+                filmDTO.poster()
+        );
+
+        when(filmsRepository.save(any(Film.class))).thenReturn(savedFilm);
+
+        // when
+        Film result = filmsService.addFilm(filmDTO);
+
+        // then
+        assertThat(result.id()).isEqualTo("123");
+        assertThat(result.title()).isEqualTo("Inception");
+        assertThat(result.poster()).isNull();
+
+        verify(filmsRepository, times(1)).save(any(Film.class));
+        verify(idService, times(1)).generateId();
+    }
+
+    @Test
+    void updateFilm_whenPosterIsNull_updatesFilmSuccessfully() {
+        String filmId = "123";
+        Film existingFilm = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+        FilmDTO filmDTO = new FilmDTO(
+                "Inception Updated",
+                LocalDate.of(2010, 7, 16),
+                9.0,
+                "Leonardo DiCaprio, Joseph Gordon-Levitt",
+                GENRE.SCI_FI,
+                150,
+                null
+        );
+        when(filmsRepository.findById(filmId)).thenReturn(Optional.of(existingFilm));
+        Film updatedFilm = new Film(
+                filmId,
+                filmDTO.title(),
+                filmDTO.release_date(),
+                filmDTO.rate(),
+                filmDTO.casts(),
+                filmDTO.genre(),
+                filmDTO.duration(),
+                existingFilm.poster() // !!! poster remains unchanged
+        );
+        when(filmsRepository.save(any(Film.class))).thenReturn(updatedFilm);
+        Film result = filmsService.updateFilm(filmId, filmDTO);
+        assertNotNull(result);
+        assertEquals(filmId, result.id());
+        assertEquals("Inception Updated", result.title());
+        assertEquals("https://example.com/inception.jpg", result.poster()); // poster should remain unchanged
+        verify(filmsRepository).findById(filmId);
+        verify(filmsRepository).save(any(Film.class));
+    }
+
+    @Test
+    void addFilm_whenReleaseDateIsNull_addsFilmSuccessfully() {
+        // given
+        FilmDTO filmDTO = new FilmDTO(
+                "Inception",
+                null,
+                8.8,
+                "Leonardo DiCaprio",
+                GENRE.SCI_FI,
+                148,
+                "https://example.com/inception.jpg"
+        );
+
+        when(idService.generateId()).thenReturn("123");
+
+        Film savedFilm = new Film(
+                "123",
+                filmDTO.title(),
+                filmDTO.release_date(),
+                filmDTO.rate(),
+                filmDTO.casts(),
+                filmDTO.genre(),
+                filmDTO.duration(),
+                filmDTO.poster()
+        );
+
+        when(filmsRepository.save(any(Film.class))).thenReturn(savedFilm);
+
+        // when
+        Film result = filmsService.addFilm(filmDTO);
+
+        // then
+        assertThat(result.id()).isEqualTo("123");
+        assertThat(result.title()).isEqualTo("Inception");
+        assertThat(result.release_date()).isNull();
+
+        verify(filmsRepository, times(1)).save(any(Film.class));
+        verify(idService, times(1)).generateId();
+    }
+    @Test
+    void updateFilm_whenReleaseDateIsNull_updatesFilmSuccessfully() {
+        String filmId = "123";
+        Film existingFilm = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+        FilmDTO filmDTO = new FilmDTO(
+                "Inception Updated",
+                null,
+                9.0,
+                "Leonardo DiCaprio, Joseph Gordon-Levitt",
+                GENRE.SCI_FI,
+                150,
+                "https://example.com/inception-updated.jpg"
+        );
+        when(filmsRepository.findById(filmId)).thenReturn(Optional.of(existingFilm));
+        Film updatedFilm = new Film(
+                filmId,
+                filmDTO.title(),
+                existingFilm.release_date(), // !!! release date remains unchanged
+                filmDTO.rate(),
+                filmDTO.casts(),
+                filmDTO.genre(),
+                filmDTO.duration(),
+                filmDTO.poster()
+        );
+        when(filmsRepository.save(any(Film.class))).thenReturn(updatedFilm);
+        Film result = filmsService.updateFilm(filmId, filmDTO);
+        assertNotNull(result);
+        assertEquals(filmId, result.id());
+        assertEquals("Inception Updated", result.title());
+        assertEquals(LocalDate.of(2010, 7, 16), result.release_date()); // release date should remain unchanged
+        verify(filmsRepository).findById(filmId);
+        verify(filmsRepository).save(any(Film.class));
+    }
+
+    @Test
+    void addFilm_whenAllOptionalFieldsAreNull_addsFilmSuccessfully() {
+        // given
+        FilmDTO filmDTO = new FilmDTO(
+                "Inception",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        when(idService.generateId()).thenReturn("123");
+
+        Film savedFilm = new Film(
+                "123",
+                filmDTO.title(),
+                filmDTO.release_date(),
+                filmDTO.rate(),
+                filmDTO.casts(),
+                filmDTO.genre(),
+                filmDTO.duration(),
+                filmDTO.poster()
+        );
+
+        when(filmsRepository.save(any(Film.class))).thenReturn(savedFilm);
+
+        // when
+        Film result = filmsService.addFilm(filmDTO);
+
+        // then
+        assertThat(result.id()).isEqualTo("123");
+        assertThat(result.title()).isEqualTo("Inception");
+        assertThat(result.release_date()).isNull();
+        assertThat(result.rate()).isNull();
+        assertThat(result.casts()).isNull();
+        assertThat(result.genre()).isNull();
+        assertThat(result.duration()).isNull();
+        assertThat(result.poster()).isNull();
+
+        verify(filmsRepository, times(1)).save(any(Film.class));
+        verify(idService, times(1)).generateId();
+    }
+
+    @Test
+    void filterFilmsByGenre_existingGenre_returnsFilteredFilms() {
+        GENRE genre = GENRE.SCI_FI;
+        Film film1 = new Film("1", "Inception", LocalDate.of(2010, 7, 16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+        Film film2 = new Film("2", "The Matrix", LocalDate.of(1999, 3, 31),
+                8.7, "Keanu Reeves", GENRE.SCI_FI, 136, "https://example.com/matrix.jpg");
+
+        when(filmsRepository.getFilmsByGenre(GENRE.SCI_FI)).thenReturn(List.of(film1, film2));
+
+        List<Film> result = filmsService.getFilmsByFilter(null, genre.name(), null);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(film -> film.genre() == GENRE.SCI_FI));
+
+        verify(filmsRepository).getFilmsByGenre(genre);
+    }
+
+    @Test
+    void  filterFilmsByGenre_emptyGenre_returnsEmptyFilms() {
+        GENRE genre = GENRE.SCI_FI;
+
+        when(filmsRepository.getFilmsByGenre(GENRE.SCI_FI)).thenReturn(List.of());
+
+        List<Film> result = filmsService.getFilmsByFilter(null, genre.name(), null);
+
+        assertNotNull(result);
+        assertEquals(0, result.size());
+
+        verify(filmsRepository).getFilmsByGenre(genre);
+    }
+
+    @Test
+    void filterFilmsByYear_existingYear_returnsFilteredFilms() {
+        int year = 2010;
+        Film film1 = new Film("1", "Inception", LocalDate.of(2010, 7, 16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+        Film film2 = new Film("2", "Toy Story 3", LocalDate.of(2010, 6, 18),
+                8.3, "Tom Hanks", GENRE.ANIMATION, 103, "https://example.com/toystory3.jpg");
+        Film film3 = new Film("3", "The Matrix", LocalDate.of(1999, 3, 31),
+                8.7, "Keanu Reeves", GENRE.SCI_FI, 136, "https://example.com/matrix.jpg");
+
+        when(filmsRepository.findAll()).thenReturn(List.of(film1, film2, film3));
+
+        List<Film> result = filmsService.getFilmsByFilter(year, null, null);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(film -> film.release_date().getYear() == year));
+
+        verify(filmsRepository).findAll();
+    }
+
+    @Test
+    void filterFilmsByYear_noFilmsInYear_returnsEmptyList() {
+        int year = 2022;
+        Film film1 = new Film("1", "Inception", LocalDate.of(2010, 7, 16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+        Film film2 = new Film("2", "Toy Story 3", LocalDate.of(2010, 6, 18),
+                8.3, "Tom Hanks", GENRE.ANIMATION, 103, "https://example.com/toystory3.jpg");
+        Film film3 = new Film("3", "The Matrix", LocalDate.of(1999, 3, 31),
+                8.7, "Keanu Reeves", GENRE.SCI_FI, 136, "https://example.com/matrix.jpg");
+
+        when(filmsRepository.findAll()).thenReturn(List.of(film1, film2, film3));
+
+        List<Film> result = filmsService.getFilmsByFilter(year, null, null);
+
+        assertNotNull(result);
+        assertEquals(0, result.size());
+
+        verify(filmsRepository).findAll();
+    }
+
+    @Test
+    void filterFilmByRate_existingRate_returnsFilteredFilms() {
+        double rate = 8.5;
+                Film film = new Film("2", "Toy Story 3", LocalDate.of(2010, 6, 18),
+                8.5, "Tom Hanks", GENRE.ANIMATION, 103, "https://example.com/toystory3.jpg");
+
+        when(filmsRepository.getFilmsByRate(rate)).thenReturn(List.of(film));
+
+        List<Film> result = filmsService.getFilmsByFilter(null, null, rate);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result.stream().allMatch(film2 -> film2.rate() >= rate));
+
+        verify(filmsRepository).getFilmsByRate(rate);
+    }
+
+    @Test
+    void filterFilmByRate_noFilmsWithRateAboveThreshold_returnsEmptyList() {
+        double rate = 9.5;
+
+        when(filmsRepository.getFilmsByRate(rate)).thenReturn(List.of());
+
+        List<Film> result = filmsService.getFilmsByFilter(null, null, rate);
+
+        assertNotNull(result);
+        assertEquals(0, result.size());
+
+        verify(filmsRepository).getFilmsByRate(rate);
+    }
+
+    @Test
+    void filterFilmsByAllCriteria_returnsFilteredFilms() {
+        int year = 2010;
+        GENRE genre = GENRE.SCI_FI;
+        double rate = 8.5;
+        Film film1 = new Film("1", "Inception", LocalDate.of(2010, 7, 16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+        Film film2 = new Film("2", "Toy Story 3", LocalDate.of(2010, 6, 18),
+                8.3, "Tom Hanks", GENRE.ANIMATION, 103, "https://example.com/toystory3.jpg");
+        Film film3 = new Film("3", "The Matrix", LocalDate.of(1999, 3, 31),
+                8.7, "Keanu Reeves", GENRE.SCI_FI, 136, "https://example.com/matrix.jpg");
+
+        when(filmsRepository.findAll()).thenReturn(List.of(film1, film2, film3));
+        when(filmsRepository.getFilmsByRate(rate)).thenReturn(List.of(film1, film3));
+        when(filmsRepository.getFilmsByGenre(genre)).thenReturn(List.of(film1, film3));
+
+        List<Film> result = filmsService.getFilmsByFilter(year, genre.name(), rate);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result.stream().allMatch(film -> film.release_date().getYear() == year));
+        assertTrue(result.stream().allMatch(film -> film.genre() == genre));
+        assertTrue(result.stream().allMatch(film -> film.rate() >= rate));
+
+        verify(filmsRepository).findAll();
+        verify(filmsRepository).getFilmsByRate(rate);
+        verify(filmsRepository).getFilmsByGenre(genre);
+    }
+
+    @Test
+    void filterFilmsByNoCriteria_returnsAllFilms() {
+        Film film1 = new Film("1", "Inception", LocalDate.of(2010, 7, 16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+        Film film2 = new Film("2", "Toy Story 3", LocalDate.of(2010, 6, 18),
+                8.3, "Tom Hanks", GENRE.ANIMATION, 103, "https://example.com/toystory3.jpg");
+        Film film3 = new Film("3", "The Matrix", LocalDate.of(1999, 3, 31),
+                8.7, "Keanu Reeves", GENRE.SCI_FI, 136, "https://example.com/matrix.jpg");
+
+        when(filmsRepository.findAll()).thenReturn(List.of(film1, film2, film3));
+
+        List<Film> result = filmsService.getFilmsByFilter(null, null, null);
+
+        assertNotNull(result);
+        assertEquals(3, result.size());
+
+        verify(filmsRepository).findAll();
+    }
+
+    @Test
+    void filterFilmsByInvalidGenre_throwsException() {
+        String invalidGenre = "INVALID_GENRE";
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> filmsService.getFilmsByFilter(null, invalidGenre, null));
+        assertEquals("Invalid genre: INVALID_GENRE", ex.getMessage());
+
+        verify(filmsRepository, never()).getFilmsByGenre(any());
+        verify(filmsRepository, never()).findAll();
+    }
+
+    @Test
+    void filterFilmsByInvalidRate_throwsException() {
+        double invalidRate = -1.0;
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> filmsService.getFilmsByFilter(null, null, invalidRate));
+        assertEquals("Rate must be between 0.0 and 10.0: -1.0", ex.getMessage());
+
+        verify(filmsRepository, never()).getFilmsByRate(anyDouble());
+        verify(filmsRepository, never()).findAll();
+    }
+
+    @Test
+    void filterFilmsByInvalidYear_throwsException() {
+        int invalidYear = 1800;
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> filmsService.getFilmsByFilter(invalidYear, null, null));
+        assertEquals("Year must be between 1888 and the current year: 1800", ex.getMessage());
+
+        verify(filmsRepository, never()).findAll();
+    }
+
+    @Test
+    void filterFilmsByYearInFuture_throwsException() {
+        int invalidYear = LocalDate.now().getYear() + 1;
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> filmsService.getFilmsByFilter(invalidYear, null, null));
+        assertEquals("Year must be between 1888 and the current year: " + invalidYear, ex.getMessage());
+
+        verify(filmsRepository, never()).findAll();
+    }
+
+    @Test
+    void filterFilmsByRate_whenRateisBigeralsThan10_throwsException() {
+        double invalidRate = 11.0;
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> filmsService.getFilmsByFilter(null, null, invalidRate));
+        assertEquals("Rate must be between 0.0 and 10.0: 11.0", ex.getMessage());
+
+        verify(filmsRepository, never()).getFilmsByRate(anyDouble());
+        verify(filmsRepository, never()).findAll();
+    }
+
+    @Test
+    void filterFilmsByRate_whenRateisSmallerThan10_throwsException() {
+        double invalidRate = -0.1;
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> filmsService.getFilmsByFilter(null, null, invalidRate));
+        assertEquals("Rate must be between 0.0 and 10.0: -0.1", ex.getMessage());
+
+        verify(filmsRepository, never()).getFilmsByRate(anyDouble());
+        verify(filmsRepository, never()).findAll();
+    }
+
+    @Test
+    void getFilmById_whenFilmIdIsNull_throwsException() {
+        ElementNotFoundExceptions ex = assertThrows(ElementNotFoundExceptions.class, () -> filmsService.getFilmById(null));
+        assertEquals("Film not found: null", ex.getMessage());
+        verify(filmsRepository, never()).findById(anyString());
+    }
 }

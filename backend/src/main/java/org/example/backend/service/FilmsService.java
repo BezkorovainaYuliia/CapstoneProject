@@ -3,9 +3,11 @@ package org.example.backend.service;
 import org.example.backend.exceptions.ElementNotFoundExceptions;
 import org.example.backend.model.Film;
 import org.example.backend.model.FilmDTO;
+import org.example.backend.model.GENRE;
 import org.example.backend.repository.FilmsRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -78,6 +80,41 @@ public class FilmsService {
         }
 
         return filmsRepository.save(existingFilm);
+    }
+
+    public List<Film> getFilmsByFilter(Integer year, String genre, Double rate) {
+
+        if (genre != null) {
+            try {
+                GENRE.valueOf(genre);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid genre: " + genre);
+            }
+        }
+
+        if (year != null && (year < 1888 || year > LocalDate.now().getYear())) {
+            throw new IllegalArgumentException("Year must be between 1888 and the current year: " + year);
+        }
+
+        if (rate != null && (rate < 0.0 || rate > 10.0)) {
+            throw new IllegalArgumentException("Rate must be between 0.0 and 10.0: " + rate);
+        }
+
+
+        List<Film> films = filmsRepository.findAll();
+
+        if (rate != null) {
+            films = filmsRepository.getFilmsByRate(rate);
+        }
+        if (genre != null) {
+            films = filmsRepository.getFilmsByGenre(GENRE.valueOf(genre));
+        }
+        if (year != null) {
+            films = films.stream()
+                    .filter(f -> f.release_date().getYear() == year)
+                    .toList();
+        }
+        return films;
     }
 
 }

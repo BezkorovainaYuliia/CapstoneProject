@@ -2,6 +2,7 @@ package org.example.backend.security;
 
 
 import com.mongodb.lang.NonNull;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").authenticated()
                         .requestMatchers("/api/auth/me").authenticated()
                         .anyRequest().permitAll()
+                )
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint((request,
+                                                   response,
+                                                   authException) ->
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED)) // 401
                 )
                 .oauth2Login(o -> o.defaultSuccessUrl(appUrl, true))
                 .logout(l -> l.logoutSuccessUrl(appUrl)

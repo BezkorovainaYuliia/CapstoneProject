@@ -46,4 +46,14 @@ public class FilmController {
         Film updatedFilm = filmsService.updateFilm(id, filmDTO);
         return ResponseEntity.ok(updatedFilm);
     }
+
+
+    @GetMapping("/films/filter")
+    public ResponseEntity<List<Film>> getFilmsByFilter(@RequestParam(required = false) Integer year,
+                                                       @RequestParam(required = false) String genre,
+                                                       @RequestParam(required = false) Double rate) {
+        List<Film> films = filmsService.getFilmsByFilter(year, genre, rate);
+        return ResponseEntity.ok(films);
+    }
+
 }
