@@ -2,11 +2,13 @@ package org.example.backend.controller;
 
 import org.example.backend.model.Film;
 import org.example.backend.model.FilmDTO;
+import org.example.backend.model.GENRE;
 import org.example.backend.service.FilmsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -52,8 +54,8 @@ public class FilmController {
     public ResponseEntity<List<Film>> getFilmsByFilter(@RequestParam(required = false) Integer year,
                                                        @RequestParam(required = false) String genre,
                                                        @RequestParam(required = false) Double rate) {
-        List<Film> films = filmsService.getFilmsByFilter(year, genre, rate);
-        return ResponseEntity.ok(films);
+      List<Film> films = filmsService.getFilmsByFilter(year, genre, rate);
+      return ResponseEntity.ok(films);
     }
 
     @GetMapping("/homepage_images")

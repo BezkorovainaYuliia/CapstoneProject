@@ -284,7 +284,7 @@ class FilmControllerTest {
                 .andExpect(jsonPath("$[0].title").value("The Dark Knight"));
 
         mockMvc.perform(get("/api/films/filter")
-                        .param("rate", "9.0"))
+                        .param("rate", "8.8"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].title").value("The Dark Knight"));
@@ -304,6 +304,33 @@ class FilmControllerTest {
         mockMvc.perform(get("/api/films/filter"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    void getFilmsByFilter_withNoMatchingFilms_returnsEmptyList() throws Exception {
+        // given
+        Film film1 = new Film("1", "Inception", LocalDate.of(2010,7,16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+        Film film2 = new Film("2", "The Dark Knight", LocalDate.of(2008,7,18),
+                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg");
+        filmsRepository.save(film1);
+        filmsRepository.save(film2);
+
+        // when + then
+        mockMvc.perform(get("/api/films/filter")
+                        .param("year", "2000"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+
+        mockMvc.perform(get("/api/films/filter")
+                        .param("genre", "COMEDY"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+
+        mockMvc.perform(get("/api/films/filter")
+                        .param("rate", "9.2"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
     }
 
     @Test
@@ -397,4 +424,6 @@ class FilmControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
+
+
 }
