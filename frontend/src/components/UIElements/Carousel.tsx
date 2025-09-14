@@ -4,25 +4,26 @@ type Props = {
     images: { id: string; src: string; alt: string }[];
 }
 
-export default function Carousel(images: Readonly<Props>) {
+export default function Carousel({images}: Readonly<Props>) {
     const [current, setCurrent] = useState(0);
 
-    if (images.images.length === 0) {
-        return <div>No images available</div>;
+    if (!images || images.length === 0) {
+        return <div className="text-center p-4">No images available</div>;
     }
+
     const prevSlide = () => {
-        setCurrent((prev) => (prev === 0 ? images.images.length - 1 : prev - 1));
+        setCurrent((prev) => (prev === 0 ? images.length - 1 : prev - 1));
     };
 
     const nextSlide = () => {
-        setCurrent((prev) => (prev === images.images.length - 1 ? 0 : prev + 1));
+        setCurrent((prev) => (prev === images.length - 1 ? 0 : prev + 1));
     };
 
     return (
         <div className="max-w-screen-xl mx-auto mt-6 relative">
             {/* Images */}
             <div className="relative h-56 md:h-96 overflow-hidden rounded-lg">
-                {images.images.map((img, i) => (
+                {images.map((img, i) => (
                     <img
                         key={img.id}
                         src={img.src}
@@ -55,7 +56,7 @@ export default function Carousel(images: Readonly<Props>) {
 
             {/* Indicators */}
             <div className="flex justify-center mt-4 space-x-2">
-                {images.images.map((img, i) => (
+                {images.map((img, i) => (
                     <button
                         key={img.id + "-indicator"}
                         onClick={() => setCurrent(i)}

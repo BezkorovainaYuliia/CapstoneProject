@@ -16,9 +16,13 @@ const images = [
     { id: "netflix", src: "https://raw.githubusercontent.com/thatanjan/netflix-clone-yt/youtube/media//banner.jpg", alt: "Netflix" },
 ];
 
+type Image = { id: string; src: string; alt: string };
+
+
 function App() {
     const [user, setUser] = useState<string | null | undefined>(undefined);
     const [loading, setLoading] = useState(true);
+    const [carouselImages, setCarouselImages] = useState<Image[]>([]);
     const nav = useNavigate();
 
 
@@ -45,6 +49,27 @@ function App() {
                 setLoading(false);
             });
     }, [nav]);
+
+    useEffect(() => {
+        if (!user) return;
+
+        axios.get("/api/homepage_images", { withCredentials: true })
+            .then(response => {
+                if (response.data) {
+                    const fetchedImages: Image[] = response.data.map(
+                        (url: string, i: number) => ({
+                            id: i.toString(),
+                            src: url,
+                            alt: "Film " + (i + 1),
+                        })
+                    );
+                    setCarouselImages(fetchedImages);
+                }
+            })
+            .catch(() => {
+                setCarouselImages([]);
+            });
+    }, [user]);
 
     if (loading) {
         return <div className="p-4 text-center">Loading...</div>;
@@ -77,7 +102,7 @@ function App() {
                     {/* Dashboard */}
                     <Route path="/" element={
                         <ProtectedRoute user={user}>
-                            <Dashboard />
+                            <Carousel images={carouselImages} />
                         </ProtectedRoute>
                     } />
 
