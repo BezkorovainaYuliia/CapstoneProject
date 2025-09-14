@@ -10,7 +10,7 @@ export default function AddFilm() {
     const [film, setFilm] = useState<Film>({
         id: "",
         title: "",
-        release_date: "",
+        releaseDate: "",
         rate: 0,
         casts: "",
         genre: "",
@@ -32,7 +32,7 @@ export default function AddFilm() {
         setFilm({
             id: "",
             title: "",
-            release_date: "",
+            releaseDate: "",
             rate: 0,
             casts: "",
             genre: "",

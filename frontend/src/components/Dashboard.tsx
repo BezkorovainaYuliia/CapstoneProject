@@ -25,7 +25,7 @@ export default function Dashboard() {
         return r >= 0 && r <= 10;
     };
 
-    // Завантаження фільмів
+
     const loadFilms = () => {
         axios
             .get<Film[]>("/api/films", { withCredentials: true })
@@ -41,7 +41,7 @@ export default function Dashboard() {
             .catch((err) => console.error("Error fetching genres:", err));
     }, []);
 
-    // Фільтрація
+
     const applyFilters = () => {
         const params: Record<string, string> = {};
         if (year) params.year = year;
@@ -118,7 +118,7 @@ export default function Dashboard() {
                 </button>
             </div>
 
-            {/* Список фільмів */}
+
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-8">
                 {films.map((film) => (
                     <FilmCard key={film.id} film={film} />

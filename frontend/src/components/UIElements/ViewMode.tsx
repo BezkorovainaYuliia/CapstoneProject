@@ -33,7 +33,7 @@ export default function ViewMode({film}: Readonly<ViewModeProps>) {
             )}
             <h1 className="text-2xl font-bold mb-2">{film.title}</h1>
             <p>
-                <strong>Release Date:</strong> {film.release_date || "-"}
+                <strong>Release Date:</strong> {film.releaseDate || "-"}
             </p>
             <p>
                 <strong>Rate:</strong> {film.rate ?? "-"}

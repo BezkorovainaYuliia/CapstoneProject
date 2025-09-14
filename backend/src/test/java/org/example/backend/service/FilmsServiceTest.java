@@ -68,7 +68,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -199,7 +199,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -426,7 +426,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -466,7 +466,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -509,7 +509,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 existingFilm.rate(), // !!! rate remains unchanged
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -555,7 +555,7 @@ class FilmsServiceTest {
         assertNotNull(result);
         assertEquals(filmId, result.id());
         assertEquals("Inception", result.title());
-        assertEquals(LocalDate.of(2010, 7, 16), result.release_date());
+        assertEquals(LocalDate.of(2010, 7, 16), result.releaseDate());
         assertEquals(8.8, result.rate());
         assertEquals("Leonardo DiCaprio", result.casts());
         assertEquals(GENRE.SCI_FI, result.genre());
@@ -583,7 +583,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -626,7 +626,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 existingFilm.genre(), // !!! genre remains unchanged
@@ -665,7 +665,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -705,7 +705,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 existingFilm.casts(), // !!! casts remains unchanged
                 filmDTO.genre(),
@@ -740,7 +740,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -780,7 +780,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -815,7 +815,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -831,7 +831,7 @@ class FilmsServiceTest {
         // then
         assertThat(result.id()).isEqualTo("123");
         assertThat(result.title()).isEqualTo("Inception");
-        assertThat(result.release_date()).isNull();
+        assertThat(result.releaseDate()).isNull();
 
         verify(filmsRepository, times(1)).save(any(Film.class));
         verify(idService, times(1)).generateId();
@@ -854,7 +854,7 @@ class FilmsServiceTest {
         Film updatedFilm = new Film(
                 filmId,
                 filmDTO.title(),
-                existingFilm.release_date(), // !!! release date remains unchanged
+                existingFilm.releaseDate(), // !!! release date remains unchanged
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -866,7 +866,7 @@ class FilmsServiceTest {
         assertNotNull(result);
         assertEquals(filmId, result.id());
         assertEquals("Inception Updated", result.title());
-        assertEquals(LocalDate.of(2010, 7, 16), result.release_date()); // release date should remain unchanged
+        assertEquals(LocalDate.of(2010, 7, 16), result.releaseDate()); // release date should remain unchanged
         verify(filmsRepository).findById(filmId);
         verify(filmsRepository).save(any(Film.class));
     }
@@ -889,7 +889,7 @@ class FilmsServiceTest {
         Film savedFilm = new Film(
                 "123",
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -905,7 +905,7 @@ class FilmsServiceTest {
         // then
         assertThat(result.id()).isEqualTo("123");
         assertThat(result.title()).isEqualTo("Inception");
-        assertThat(result.release_date()).isNull();
+        assertThat(result.releaseDate()).isNull();
         assertThat(result.rate()).isNull();
         assertThat(result.casts()).isNull();
         assertThat(result.genre()).isNull();
@@ -924,7 +924,7 @@ class FilmsServiceTest {
         Film film2 = new Film("2", "The Matrix", LocalDate.of(1999, 3, 31),
                 8.7, "Keanu Reeves", GENRE.SCI_FI, 136, "https://example.com/matrix.jpg");
 
-        when(filmsRepository.getFilmsByGenre(GENRE.SCI_FI)).thenReturn(List.of(film1, film2));
+        when(filmsRepository.findFilmsByGenre(genre)).thenReturn(List.of(film1, film2));
 
         List<Film> result = filmsService.getFilmsByFilter(null, genre.name(), null);
 
@@ -932,21 +932,21 @@ class FilmsServiceTest {
         assertEquals(2, result.size());
         assertTrue(result.stream().allMatch(film -> film.genre() == GENRE.SCI_FI));
 
-        verify(filmsRepository).getFilmsByGenre(genre);
+        verify(filmsRepository).findFilmsByGenre(genre);
     }
 
     @Test
     void  filterFilmsByGenre_emptyGenre_returnsEmptyFilms() {
         GENRE genre = GENRE.SCI_FI;
 
-        when(filmsRepository.getFilmsByGenre(GENRE.SCI_FI)).thenReturn(List.of());
+        when(filmsRepository.findFilmsByGenre(genre)).thenReturn(List.of());
 
         List<Film> result = filmsService.getFilmsByFilter(null, genre.name(), null);
 
         assertNotNull(result);
         assertEquals(0, result.size());
 
-        verify(filmsRepository).getFilmsByGenre(genre);
+        verify(filmsRepository).findFilmsByGenre(genre);
     }
 
     @Test
@@ -956,38 +956,35 @@ class FilmsServiceTest {
                 8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
         Film film2 = new Film("2", "Toy Story 3", LocalDate.of(2010, 6, 18),
                 8.3, "Tom Hanks", GENRE.ANIMATION, 103, "https://example.com/toystory3.jpg");
-        Film film3 = new Film("3", "The Matrix", LocalDate.of(1999, 3, 31),
-                8.7, "Keanu Reeves", GENRE.SCI_FI, 136, "https://example.com/matrix.jpg");
 
-        when(filmsRepository.findAll()).thenReturn(List.of(film1, film2, film3));
+        LocalDate start = LocalDate.of(year, 1, 1);
+        LocalDate end = LocalDate.of(year, 12, 31);
+
+        when(filmsRepository.findFilmsByReleaseDateBetween(start, end)).thenReturn(List.of(film1, film2));
 
         List<Film> result = filmsService.getFilmsByFilter(year, null, null);
 
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertTrue(result.stream().allMatch(film -> film.release_date().getYear() == year));
+        assertTrue(result.stream().allMatch(film -> film.releaseDate().getYear() == year));
 
-        verify(filmsRepository).findAll();
+        verify(filmsRepository).findFilmsByReleaseDateBetween(start, end);
     }
 
     @Test
     void filterFilmsByYear_noFilmsInYear_returnsEmptyList() {
         int year = 2022;
-        Film film1 = new Film("1", "Inception", LocalDate.of(2010, 7, 16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
-        Film film2 = new Film("2", "Toy Story 3", LocalDate.of(2010, 6, 18),
-                8.3, "Tom Hanks", GENRE.ANIMATION, 103, "https://example.com/toystory3.jpg");
-        Film film3 = new Film("3", "The Matrix", LocalDate.of(1999, 3, 31),
-                8.7, "Keanu Reeves", GENRE.SCI_FI, 136, "https://example.com/matrix.jpg");
+        LocalDate start = LocalDate.of(year, 1, 1);
+        LocalDate end = LocalDate.of(year, 12, 31);
 
-        when(filmsRepository.findAll()).thenReturn(List.of(film1, film2, film3));
+        when(filmsRepository.findFilmsByReleaseDateBetween(start, end)).thenReturn(List.of());
 
         List<Film> result = filmsService.getFilmsByFilter(year, null, null);
 
         assertNotNull(result);
         assertEquals(0, result.size());
 
-        verify(filmsRepository).findAll();
+        verify(filmsRepository).findFilmsByReleaseDateBetween(start, end);
     }
 
     @Test
@@ -996,7 +993,7 @@ class FilmsServiceTest {
                 Film film = new Film("2", "Toy Story 3", LocalDate.of(2010, 6, 18),
                 8.5, "Tom Hanks", GENRE.ANIMATION, 103, "https://example.com/toystory3.jpg");
 
-        when(filmsRepository.getFilmsByRate(rate)).thenReturn(List.of(film));
+        when(filmsRepository.findFilmsByRateAfter(rate)).thenReturn(List.of(film));
 
         List<Film> result = filmsService.getFilmsByFilter(null, null, rate);
 
@@ -1004,81 +1001,60 @@ class FilmsServiceTest {
         assertEquals(1, result.size());
         assertTrue(result.stream().allMatch(film2 -> film2.rate() >= rate));
 
-        verify(filmsRepository).getFilmsByRate(rate);
+        verify(filmsRepository).findFilmsByRateAfter(rate);
     }
 
     @Test
     void filterFilmByRate_noFilmsWithRateAboveThreshold_returnsEmptyList() {
         double rate = 9.5;
 
-        when(filmsRepository.getFilmsByRate(rate)).thenReturn(List.of());
+        when(filmsRepository.findFilmsByRateAfter(rate)).thenReturn(List.of());
 
         List<Film> result = filmsService.getFilmsByFilter(null, null, rate);
 
         assertNotNull(result);
         assertEquals(0, result.size());
 
-        verify(filmsRepository).getFilmsByRate(rate);
+        verify(filmsRepository).findFilmsByRateAfter(rate);
     }
 
     @Test
     void filterFilmsByAllCriteria_returnsFilteredFilms() {
         int year = 2010;
+        LocalDate start = LocalDate.of(year, 1, 1);
+        LocalDate end = LocalDate.of(year, 12, 31);
         GENRE genre = GENRE.SCI_FI;
         double rate = 8.5;
         Film film1 = new Film("1", "Inception", LocalDate.of(2010, 7, 16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
-        Film film2 = new Film("2", "Toy Story 3", LocalDate.of(2010, 6, 18),
-                8.3, "Tom Hanks", GENRE.ANIMATION, 103, "https://example.com/toystory3.jpg");
-        Film film3 = new Film("3", "The Matrix", LocalDate.of(1999, 3, 31),
-                8.7, "Keanu Reeves", GENRE.SCI_FI, 136, "https://example.com/matrix.jpg");
+                8.5, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
 
-        when(filmsRepository.findAll()).thenReturn(List.of(film1, film2, film3));
-        when(filmsRepository.getFilmsByRate(rate)).thenReturn(List.of(film1, film3));
-        when(filmsRepository.getFilmsByGenre(genre)).thenReturn(List.of(film1, film3));
+        when(filmsRepository.findFilmsByGenreAndRateAfterAndReleaseDateBetween(genre, rate, start, end)).thenReturn(List.of(film1));
 
         List<Film> result = filmsService.getFilmsByFilter(year, genre.name(), rate);
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertTrue(result.stream().allMatch(film -> film.release_date().getYear() == year));
+        assertTrue(result.stream().allMatch(film -> film.releaseDate().getYear() == year));
         assertTrue(result.stream().allMatch(film -> film.genre() == genre));
         assertTrue(result.stream().allMatch(film -> film.rate() >= rate));
 
-        verify(filmsRepository).findAll();
-        verify(filmsRepository).getFilmsByRate(rate);
-        verify(filmsRepository).getFilmsByGenre(genre);
+        verify(filmsRepository).findFilmsByGenreAndRateAfterAndReleaseDateBetween(genre, rate, start, end);
+
     }
 
-    @Test
-    void filterFilmsByNoCriteria_returnsAllFilms() {
-        Film film1 = new Film("1", "Inception", LocalDate.of(2010, 7, 16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
-        Film film2 = new Film("2", "Toy Story 3", LocalDate.of(2010, 6, 18),
-                8.3, "Tom Hanks", GENRE.ANIMATION, 103, "https://example.com/toystory3.jpg");
-        Film film3 = new Film("3", "The Matrix", LocalDate.of(1999, 3, 31),
-                8.7, "Keanu Reeves", GENRE.SCI_FI, 136, "https://example.com/matrix.jpg");
-
-        when(filmsRepository.findAll()).thenReturn(List.of(film1, film2, film3));
-
-        List<Film> result = filmsService.getFilmsByFilter(null, null, null);
-
-        assertNotNull(result);
-        assertEquals(3, result.size());
-
-        verify(filmsRepository).findAll();
-    }
 
     @Test
-    void filterFilmsByInvalidGenre_throwsException() {
+    void filterFilmsByInvalidGenre_throwsException() throws IllegalArgumentException {
         String invalidGenre = "INVALID_GENRE";
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> filmsService.getFilmsByFilter(null, invalidGenre, null));
         assertEquals("Invalid genre: INVALID_GENRE", ex.getMessage());
 
-        verify(filmsRepository, never()).getFilmsByGenre(any());
-        verify(filmsRepository, never()).findAll();
+    verify(filmsRepository, never()).findFilmsByGenreAndRateAfterAndReleaseDateBetween(any(GENRE.class),
+            isNull(Double.class),
+            isNull(LocalDate.class),
+            isNull(LocalDate.class));
     }
 
     @Test
@@ -1089,54 +1065,57 @@ class FilmsServiceTest {
                 () -> filmsService.getFilmsByFilter(null, null, invalidRate));
         assertEquals("Rate must be between 0.0 and 10.0: -1.0", ex.getMessage());
 
-        verify(filmsRepository, never()).getFilmsByRate(anyDouble());
-        verify(filmsRepository, never()).findAll();
+        verify(filmsRepository, never()).findFilmsByRateAfter(invalidRate);
     }
 
     @Test
     void filterFilmsByInvalidYear_throwsException() {
         int invalidYear = 1800;
+        LocalDate start = LocalDate.of(invalidYear, 7, 16);
+        LocalDate end = LocalDate.of(invalidYear, 12, 31);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> filmsService.getFilmsByFilter(invalidYear, null, null));
         assertEquals("Year must be between 1888 and the current year: 1800", ex.getMessage());
 
-        verify(filmsRepository, never()).findAll();
+        verify(filmsRepository, never()).findFilmsByReleaseDateBetween(start, end);
     }
 
     @Test
     void filterFilmsByYearInFuture_throwsException() {
         int invalidYear = LocalDate.now().getYear() + 1;
+        LocalDate start = LocalDate.of(invalidYear, 7, 16);
+        LocalDate end = LocalDate.of(invalidYear, 12, 31);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> filmsService.getFilmsByFilter(invalidYear, null, null));
         assertEquals("Year must be between 1888 and the current year: " + invalidYear, ex.getMessage());
 
-        verify(filmsRepository, never()).findAll();
+        verify(filmsRepository, never()).findFilmsByReleaseDateBetween(start, end);
     }
 
     @Test
-    void filterFilmsByRate_whenRateisBigeralsThan10_throwsException() {
+    void filterFilmsByRate_whenRateIsBigerAlsThan10_throwsException() {
         double invalidRate = 11.0;
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> filmsService.getFilmsByFilter(null, null, invalidRate));
         assertEquals("Rate must be between 0.0 and 10.0: 11.0", ex.getMessage());
 
-        verify(filmsRepository, never()).getFilmsByRate(anyDouble());
-        verify(filmsRepository, never()).findAll();
+        verify(filmsRepository, never()).findFilmsByRateAfter(invalidRate);
+
     }
 
     @Test
-    void filterFilmsByRate_whenRateisSmallerThan10_throwsException() {
+    void filterFilmsByRate_whenRateIsSmallerThan10_throwsException() {
         double invalidRate = -0.1;
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> filmsService.getFilmsByFilter(null, null, invalidRate));
         assertEquals("Rate must be between 0.0 and 10.0: -0.1", ex.getMessage());
 
-        verify(filmsRepository, never()).getFilmsByRate(anyDouble());
-        verify(filmsRepository, never()).findAll();
+        verify(filmsRepository, never()).findFilmsByRateAfter(invalidRate);
+
     }
 
     @Test
@@ -1145,4 +1124,139 @@ class FilmsServiceTest {
         assertEquals("Film not found: null", ex.getMessage());
         verify(filmsRepository, never()).findById(anyString());
     }
+
+    @Test
+    void getFilmByRateAfterAndGenre_returnsFilteredFilms() {
+        double rate = 8.0;
+        GENRE genre = GENRE.DRAMA;
+        Film film1 = new Film("1", "The Shawshank Redemption", LocalDate.of(1994, 9, 22),
+                9.3, "Tim Robbins", GENRE.DRAMA, 142, "https://example.com/shawshank.jpg");
+        Film film2 = new Film("2", "Forrest Gump", LocalDate.of(1994, 7, 6),
+                8.8, "Tom Hanks", GENRE.DRAMA, 142, "https://example.com/forrestgump.jpg");
+
+        when(filmsRepository.findFilmsByGenreAndRateAfter(genre, rate)).thenReturn(List.of(film1, film2));
+
+        List<Film> result = filmsService.getFilmsByFilter(null, genre.name(), rate);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(film -> film.rate() > rate && film.genre() == genre));
+
+        verify(filmsRepository).findFilmsByGenreAndRateAfter(genre, rate);
+    }
+
+    @Test
+    void getFilmByRateAfterAndGenre_noFilmsMatchCriteria_returnsEmptyList() {
+        double rate = 9.5;
+        GENRE genre = GENRE.DRAMA;
+
+        when(filmsRepository.findFilmsByGenreAndRateAfter(genre, rate)).thenReturn(List.of());
+
+        List<Film> result = filmsService.getFilmsByFilter(null, genre.name(), rate);
+
+        assertNotNull(result);
+        assertEquals(0, result.size());
+
+        verify(filmsRepository).findFilmsByGenreAndRateAfter(genre, rate);
+    }
+
+    @Test
+    void getFilmByRateAfterAndYear_returnsFilteredFilms() {
+        double rate = 8.0;
+        int year = 1994;
+        LocalDate start = LocalDate.of(year, 1, 1);
+        LocalDate end = LocalDate.of(year, 12, 31);
+        Film film1 = new Film("1", "The Shawshank Redemption", LocalDate.of(1994, 9, 22),
+                9.3, "Tim Robbins", GENRE.DRAMA, 142, "https://example.com/shawshank.jpg");
+        Film film2 = new Film("2", "Forrest Gump", LocalDate.of(1994, 7, 6),
+                8.8, "Tom Hanks", GENRE.DRAMA, 142, "https://example.com/forrestgump.jpg");
+
+        when(filmsRepository.findFilmsByRateAfterAndReleaseDateBetween(rate, start, end))
+                .thenReturn(List.of(film1, film2));
+
+        List<Film> result = filmsService.getFilmsByFilter(year, null, rate);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(film -> film.rate() > rate && film.releaseDate().getYear() == year));
+
+        verify(filmsRepository).findFilmsByRateAfterAndReleaseDateBetween(rate, start, end);
+    }
+
+    @Test
+    void getFilmByRateAfterAndYear_noFilmsMatchCriteria_returnsEmptyList() {
+        double rate = 9.5;
+        int year = 1994;
+        LocalDate start = LocalDate.of(year, 1, 1);
+        LocalDate end = LocalDate.of(year, 12, 31);
+
+        when(filmsRepository.findFilmsByRateAfterAndReleaseDateBetween(rate, start, end))
+                .thenReturn(List.of());
+
+        List<Film> result = filmsService.getFilmsByFilter(year, null, rate);
+
+        assertNotNull(result);
+        assertEquals(0, result.size());
+
+        verify(filmsRepository).findFilmsByRateAfterAndReleaseDateBetween(rate, start, end);
+    }
+
+    @Test
+    void getFilmsByGenreAndYear_returnFilms(){
+        GENRE genre = GENRE.DRAMA;
+        int year = 1994;
+        LocalDate start = LocalDate.of(year, 1, 1);
+        LocalDate end = LocalDate.of(year, 12, 31);
+        Film film1 = new Film("1", "The Shawshank Redemption", LocalDate.of(1994, 9, 22),
+                9.3, "Tim Robbins", GENRE.DRAMA, 142, "https://example.com/shawshank.jpg");
+        Film film2 = new Film("2", "Forrest Gump", LocalDate.of(1994, 7, 6),
+                8.8, "Tom Hanks", GENRE.DRAMA, 142, "https://example.com/forrestgump.jpg");
+
+        when(filmsRepository.findFilmsByGenreAndReleaseDateBetween(genre, start, end))
+                .thenReturn(List.of(film1, film2));
+
+        List<Film> result = filmsService.getFilmsByFilter(year, genre.name(), null);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(film -> film.genre().equals(genre) && film.releaseDate().getYear() == year));
+
+        verify(filmsRepository).findFilmsByGenreAndReleaseDateBetween(genre, start, end);
+    }
+
+    @Test
+    void getHomepageImages_noRecentFilms_returnsEmptyList() {
+        LocalDate now = LocalDate.now();
+        LocalDate start = now.minusMonths(1);
+        LocalDate end = now.plusMonths(1);
+
+        when(filmsRepository.findFilmsByReleaseDateBetween(start, end))
+                .thenReturn(List.of());
+
+        List<String> posters = filmsService.getHomepageImages();
+
+        assertNotNull(posters);
+        assertTrue(posters.isEmpty());
+    }
+
+    @Test
+    void getHomepageImages_returnsOnlyRecentFilms() {
+        LocalDate now = LocalDate.now();
+
+        Film recentFilm = new Film("1", "Recent Movie", now.minusDays(10),
+                8.0, "Actor 1", GENRE.DRAMA, 120, "poster1.jpg");
+
+
+        LocalDate start = now.minusMonths(1);
+        LocalDate end = now.plusMonths(1);
+
+        when(filmsRepository.findFilmsByReleaseDateBetween(start, end))
+                .thenReturn(List.of(recentFilm));
+
+        List<String> posters = filmsService.getHomepageImages();
+
+        assertEquals(1, posters.size());
+        assertEquals("poster1.jpg", posters.getFirst());
+    }
+
 }

@@ -52,8 +52,14 @@ public class FilmController {
     public ResponseEntity<List<Film>> getFilmsByFilter(@RequestParam(required = false) Integer year,
                                                        @RequestParam(required = false) String genre,
                                                        @RequestParam(required = false) Double rate) {
-        List<Film> films = filmsService.getFilmsByFilter(year, genre, rate);
-        return ResponseEntity.ok(films);
+      List<Film> films = filmsService.getFilmsByFilter(year, genre, rate);
+      return ResponseEntity.ok(films);
+    }
+
+    @GetMapping("/homepage_images")
+    public ResponseEntity<List<String>> getHomepageImages() {
+        List<String> images = filmsService.getHomepageImages();
+        return ResponseEntity.ok(images);
     }
 
 }

@@ -10,7 +10,7 @@ public record FilmDTO(
         String title,
         //!!!! i need this format to parse the date from the request body
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-        LocalDate release_date,
+        LocalDate releaseDate,
         Double rate,
         String casts,
         GENRE genre,

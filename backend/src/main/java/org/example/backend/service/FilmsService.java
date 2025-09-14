@@ -34,7 +34,7 @@ public class FilmsService {
         Film newFilm = new Film(
                 idService.generateId(),
                 filmDTO.title(),
-                filmDTO.release_date(),
+                filmDTO.releaseDate(),
                 filmDTO.rate(),
                 filmDTO.casts(),
                 filmDTO.genre(),
@@ -63,8 +63,8 @@ public class FilmsService {
         if (filmDTO.title() != null && !filmDTO.title().isBlank()) {
             existingFilm = existingFilm.withTitle(filmDTO.title());
         }
-        if (filmDTO.release_date() != null) {
-            existingFilm = existingFilm.withRelease_date(filmDTO.release_date());
+        if (filmDTO.releaseDate() != null) {
+            existingFilm = existingFilm.withReleaseDate(filmDTO.releaseDate());
         }
         if (filmDTO.rate() != null) {
             existingFilm = existingFilm.withRate(filmDTO.rate());
@@ -83,38 +83,70 @@ public class FilmsService {
     }
 
     public List<Film> getFilmsByFilter(Integer year, String genre, Double rate) {
+        LocalDate start = null;
+        LocalDate end = null;
 
-        if (genre != null) {
-            try {
-                GENRE.valueOf(genre);
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Invalid genre: " + genre);
-            }
+        if (year != null) {
+            validateYear(year);
+            start = LocalDate.of(year, 1, 1);
+            end = LocalDate.of(year, 12, 31);
         }
 
-        if (year != null && (year < 1888 || year > LocalDate.now().getYear())) {
+        GENRE filmGenre = parseGenre(genre);
+        validateRate(rate);
+
+        return queryFilms(start, end, filmGenre, rate);
+    }
+
+    private void validateYear(Integer year) {
+        int currentYear = LocalDate.now().getYear();
+        if (year < 1888 || year > currentYear) {
             throw new IllegalArgumentException("Year must be between 1888 and the current year: " + year);
         }
+    }
 
+    private GENRE parseGenre(String genre) {
+        if (genre == null) return null;
+        try {
+            return GENRE.valueOf(genre);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid genre: " + genre);
+        }
+    }
+
+    private void validateRate(Double rate) {
         if (rate != null && (rate < 0.0 || rate > 10.0)) {
             throw new IllegalArgumentException("Rate must be between 0.0 and 10.0: " + rate);
         }
-
-
-        List<Film> films = filmsRepository.findAll();
-
-        if (rate != null) {
-            films = filmsRepository.getFilmsByRate(rate);
-        }
-        if (genre != null) {
-            films = filmsRepository.getFilmsByGenre(GENRE.valueOf(genre));
-        }
-        if (year != null) {
-            films = films.stream()
-                    .filter(f -> f.release_date().getYear() == year)
-                    .toList();
-        }
-        return films;
     }
 
+    private List<Film> queryFilms(LocalDate start, LocalDate end, GENRE genre, Double rate) {
+
+        if (start != null && genre != null && rate != null) {
+            return filmsRepository.findFilmsByGenreAndRateAfterAndReleaseDateBetween(genre, rate, start, end);
+        }
+
+        if (start != null && genre != null) return filmsRepository.findFilmsByGenreAndReleaseDateBetween(genre, start, end);
+        if (start != null && rate != null) return filmsRepository.findFilmsByRateAfterAndReleaseDateBetween(rate, start, end);
+        if (genre != null && rate != null) return filmsRepository.findFilmsByGenreAndRateAfter(genre, rate);
+
+        if (start != null) return filmsRepository.findFilmsByReleaseDateBetween(start, end);
+        if (genre != null) return filmsRepository.findFilmsByGenre(genre);
+        if (rate != null) return filmsRepository.findFilmsByRateAfter(rate);
+
+        return filmsRepository.findAll();
+    }
+
+
+    public List<String> getHomepageImages() {
+        LocalDate now = LocalDate.now();
+        LocalDate start = now.minusMonths(1);
+        LocalDate end = now.plusMonths(1);
+
+        List<Film> films = filmsRepository.findFilmsByReleaseDateBetween(start, end);
+
+        return films.stream()
+                .map(Film::poster)
+                .toList();
+    }
 }
