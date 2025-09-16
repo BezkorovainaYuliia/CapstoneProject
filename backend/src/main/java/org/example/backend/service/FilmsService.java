@@ -78,6 +78,9 @@ public class FilmsService {
         if (filmDTO.duration() != null) {
             existingFilm = existingFilm.withDuration(filmDTO.duration());
         }
+        if (filmDTO.poster() != null) {
+            existingFilm = existingFilm.withPoster(filmDTO.poster());
+        }
 
         return filmsRepository.save(existingFilm);
     }

@@ -1202,6 +1202,49 @@ class FilmsServiceTest {
     }
 
     @Test
+    void updateFilm_newPoster_returnUpdatedFilm(){
+        String filmId = "123";
+        Film existingFilm = new Film(filmId, "Inception", LocalDate.of(2010, 7, 16),
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+
+        FilmDTO filmDTO = new FilmDTO(
+                null,
+                null,
+                9.0,
+                null,
+                null,
+                150,
+                null
+        );
+
+        when(filmsRepository.findById(filmId)).thenReturn(Optional.of(existingFilm));
+
+        Film updatedFilm = new Film(
+                filmId,
+                "Inception",
+                LocalDate.of(2010, 7, 16),
+                9.0,
+                "Leonardo DiCaprio",
+                GENRE.SCI_FI,
+                150,
+                "https://example.com/inception2.jpg"
+        );
+
+        when(filmsRepository.save(any(Film.class))).thenReturn(updatedFilm);
+
+        Film result = filmsService.updateFilm(filmId, filmDTO);
+
+        assertNotNull(result);
+        assertEquals(filmId, result.id());
+        assertEquals("https://example.com/inception2.jpg", result.poster());
+        assertEquals(9.0, result.rate());
+        assertEquals(150, result.duration());
+
+        verify(filmsRepository).findById(filmId);
+        verify(filmsRepository).save(any(Film.class));
+    }
+
+    @Test
     void getFilmsByGenreAndYear_returnFilms(){
         GENRE genre = GENRE.DRAMA;
         int year = 1994;
