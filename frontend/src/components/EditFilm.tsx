@@ -7,13 +7,22 @@ import FilmForm from "./UIElements/FilmForm.tsx";
 export default function EditFilm() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [film, setFilm] = useState<Film | null>(null);
+    const [film, setFilm] = useState<Film>({ id: "",
+        title: "",
+        releaseDate: "",
+        rate: 0,
+        casts: "",
+        genre: "",
+        duration: 0,
+        poster: "",});
 
     useEffect(() => {
         console.log(id);
         if (id) {
             axios.get(`/api/films/${id}`, { withCredentials: true })
-                .then(res => setFilm(res.data))
+                .then(res => {
+                    setFilm(res.data);
+                })
                 .catch(err => console.error(err));
         }
     }, [id]);
@@ -22,7 +31,9 @@ export default function EditFilm() {
 
     const handleSubmit = (updatedFilm: Film) => {
         axios.put(`/api/films/${updatedFilm.id}`, updatedFilm, { withCredentials: true })
-            .then(() => navigate("/films"))
+            .then(res => {
+                console.log(res.data);
+                navigate("/films");})
             .catch(err => console.error("Error updating film:", err));
     };
 
@@ -30,7 +41,7 @@ export default function EditFilm() {
         <FilmForm
             film={film}
             onSubmit={handleSubmit}
-            onCancel={() => navigate("/")}
+            onCancel={() => navigate("/films")}
             readonly={false}
         />
     );

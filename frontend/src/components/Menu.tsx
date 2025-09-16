@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import BellIcon from "./icons/BellIcon.tsx";
+import "./Menu.css";
+import VideoCamIcon from "./icons/VideoCamIcon.tsx";
+import LogoutIcon from "./icons/LogoutIcon.tsx";
 
 interface NaviBarProps {
     user: string | null;
@@ -26,29 +29,19 @@ export default function Menu({ user, onUserChange }: Readonly<NaviBarProps>) {
     ];
 
     return (
-        <nav className="bg-blue-700 text-white p-4 flex justify-between items-center">
-            {/* Логотип */}
+        <nav className="navbar">
+            {/* Logo */}
             <div className="flex items-center space-x-8">
-                {/* Лого */}
-                <div className="flex items-center space-x-2">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-6 h-6 text-indigo-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        <path d="M11 0L8 20h2l3-20h-2zM2 10l1 10h2L5 10H2zm12 0h-3l1 10h2l1-10z" />
-                    </svg>
-                </div>
+                <VideoCamIcon/>
 
-                {/* Посилання */}
-                <div className="flex space-x-6">
+                {/* Links */}
+                <div className="nav-links">
                     {links.map((link) =>
                         link.auth && !user ? null : (
                             <button
                                 key={link.path}
                                 onClick={() => nav(link.path)}
-                                className="hover:underline"
+                                className="nav-button"
                             >
                                 {link.label}
                             </button>
@@ -102,9 +95,9 @@ export default function Menu({ user, onUserChange }: Readonly<NaviBarProps>) {
                         </span>
                         <button
                             onClick={logout}
-                            className="bg-red-900 px-3 py-1 rounded hover:bg-red-800"
+                            className="logout-button"
                         >
-                            Logout
+                            <LogoutIcon/>
                         </button>
                     </div>
                 ) }

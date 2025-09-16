@@ -8,3 +8,5 @@ export type Film = {
     duration: number;
     poster: string;
 }
+
+export const NO_IMAGE_POSTER = "https://upload.wikimedia.org/wikipedia/commons/c/c2/No_image_poster.png"

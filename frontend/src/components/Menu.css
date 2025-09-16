@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@layer components {
+    .navbar {
+        @apply sm:flex-row bg-blue-700 text-white p-4 flex justify-between items-center;
+
+        @apply md:flex-row justify-between items-center space-y-0 p-4;
+
+        @apply lg:px-8;
+    }
+
+    .nav-links {
+        @apply flex space-x-6;
+    }
+
+    .nav-button {
+        @apply hover:underline;
+    }
+
+    .search-input {
+        @apply bg-[#1e293b] text-sm text-gray-300 rounded-md pl-9 pr-3 py-2
+        focus:outline-none focus:ring-2 focus:ring-indigo-500;
+    }
+
+    .icon-button {
+        @apply p-2 rounded-full hover:bg-[#1e293b];
+    }
+
+    .user-section {
+        @apply flex items-center space-x-4;
+    }
+
+    .logout-button {
+        @apply bg-gray-500 px-3 py-1 rounded hover:bg-gray-700;
+    }
+}

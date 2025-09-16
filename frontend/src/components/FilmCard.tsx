@@ -1,4 +1,5 @@
 import type { Film } from "./Types.ts";
+import { NO_IMAGE_POSTER } from "./Types.ts";
 import { Link } from "react-router-dom";
 
 type FilmCardProps = {
@@ -18,7 +19,7 @@ export default function FilmCard({ film }: Readonly<FilmCardProps>) {
             {/* Poster */}
             <div className="overflow-hidden">
                 <img
-                    src={film.poster}
+                    src={film.poster || NO_IMAGE_POSTER}
                     alt={film.title}
                     className="w-full h-64 object-cover transition-transform duration-300 hover:scale-110"
                 />
