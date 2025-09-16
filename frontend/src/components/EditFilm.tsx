@@ -14,7 +14,8 @@ export default function EditFilm() {
         casts: "",
         genre: "",
         duration: 0,
-        poster: "",});
+        poster: "",
+        description : ""});
 
     useEffect(() => {
         console.log(id);
