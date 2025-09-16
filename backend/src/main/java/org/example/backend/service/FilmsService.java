@@ -39,7 +39,8 @@ public class FilmsService {
                 filmDTO.casts(),
                 filmDTO.genre(),
                 filmDTO.duration(),
-                filmDTO.poster()
+                filmDTO.poster(),
+                filmDTO.description()
         );
         return filmsRepository.save(newFilm);
     }
@@ -80,6 +81,9 @@ public class FilmsService {
         }
         if (filmDTO.poster() != null) {
             existingFilm = existingFilm.withPoster(filmDTO.poster());
+        }
+        if (filmDTO.description() != null) {
+            existingFilm = existingFilm.withDescription(filmDTO.description());
         }
 
         return filmsRepository.save(existingFilm);

@@ -15,5 +15,6 @@ public record FilmDTO(
         String casts,
         GENRE genre,
         Integer duration,
-        String poster) {
+        String poster,
+        String description) {
 }

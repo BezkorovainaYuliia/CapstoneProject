@@ -16,6 +16,7 @@ export default function AddFilm() {
         genre: "",
         duration: 0,
         poster: "",
+        description : ""
     });
     const navigator = useNavigate();
 
@@ -38,6 +39,7 @@ export default function AddFilm() {
             genre: "",
             duration: 0,
             poster: "",
+            description : ""
         });
         navigator("/");
     }

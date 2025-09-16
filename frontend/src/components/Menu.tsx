@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import BellIcon from "./icons/BellIcon.tsx";
 import "./Menu.css";
 import VideoCamIcon from "./icons/VideoCamIcon.tsx";
 import LogoutIcon from "./icons/LogoutIcon.tsx";
@@ -33,7 +32,6 @@ export default function Menu({ user, onUserChange }: Readonly<NaviBarProps>) {
             {/* Logo */}
             <div className="flex items-center space-x-8">
                 <VideoCamIcon/>
-
                 {/* Links */}
                 <div className="nav-links">
                     {links.map((link) =>
@@ -48,39 +46,6 @@ export default function Menu({ user, onUserChange }: Readonly<NaviBarProps>) {
                         )
                     )}
                 </div>
-            </div>
-
-            <div className="flex items-center space-x-4">
-                {/* Пошук */}
-                <div className="relative">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-4 h-4 text-gray-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
-                            />
-                        </svg>
-                    </span>
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        className="bg-[#1e293b] text-sm text-gray-300 rounded-md pl-9 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                </div>
-                {/* Дзвіночок */}
-                <button className="p-2 rounded-full hover:bg-[#1e293b]">
-                    <BellIcon/>
-                </button>
-            </div>
-
             {/* Правий блок: користувач або логін */}
             <div>
                 {user && (
@@ -101,6 +66,7 @@ export default function Menu({ user, onUserChange }: Readonly<NaviBarProps>) {
                         </button>
                     </div>
                 ) }
+            </div>
             </div>
         </nav>
     );
