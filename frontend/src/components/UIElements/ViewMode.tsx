@@ -4,6 +4,7 @@ import type {Film} from "../Types.ts";
 import EditIcon from "../icons/EditIcon.tsx";
 import DeleteIcon from "../icons/DeleteIcon.tsx";
 import axios from "axios";
+import { NO_IMAGE_POSTER } from "../Types.ts";
 
 interface ViewModeProps {
     film: Film;
@@ -24,13 +25,13 @@ export default function ViewMode({film}: Readonly<ViewModeProps>) {
 
     return (
         <div className="max-w-md mx-auto p-4 bg-white rounded shadow">
-            {film.poster && (
+
                 <img
-                    src={film.poster}
+                    src={film.poster || NO_IMAGE_POSTER}
                     alt={film.title}
                     className="w-full h-64 object-cover rounded mb-4"
                 />
-            )}
+
             <h1 className="text-2xl font-bold mb-2">{film.title}</h1>
             <p>
                 <strong>Release Date:</strong> {film.releaseDate || "-"}

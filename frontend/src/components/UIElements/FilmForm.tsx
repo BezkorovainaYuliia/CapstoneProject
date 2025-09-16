@@ -116,9 +116,10 @@ export default function FilmForm({
                     value={formData.rate || ""}
                     onChange={(e) => handleChange({ rate: Number(e.target.value) })}
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                    min={0}
+                    min={0.1}
                     max={10}
                     step={0.1}
+                    required
                 />
                 <label
                     htmlFor="rate"
@@ -133,10 +134,11 @@ export default function FilmForm({
                 <input
                     type="text"
                     id="casts"
-                    value={formData.casts || ""}
+                    value={formData.casts || " "}
                     onChange={(e) => handleChange({ casts: e.target.value })}
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
+                    required
                 />
                 <label
                     htmlFor="casts"
@@ -178,7 +180,9 @@ export default function FilmForm({
                     value={formData.duration || ""}
                     onChange={(e) => handleChange({ duration: Number(e.target.value) })}
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    placeholder="0"
                     min={0}
+                    max={200}
                 />
                 <label
                     htmlFor="duration"
@@ -193,10 +197,9 @@ export default function FilmForm({
                 <input
                     type="url"
                     id="posterUrl"
-                    value={formData.poster || ""}
+                    value={formData.poster}
                     onChange={(e) => handleChange({ poster: e.target.value })}
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                    placeholder=" "
                 />
                 <label
                     htmlFor="posterUrl"

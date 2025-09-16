@@ -22,7 +22,7 @@ export default function AddFilm() {
     const handleSubmit = (newFilm: Film) => {
         axios.post("/api/films", newFilm, { withCredentials: true })
             .then(() => {
-                handleCancel();
+                navigator("/films");
             })
             .catch(err => console.error("Error saving film:", err));
     };
