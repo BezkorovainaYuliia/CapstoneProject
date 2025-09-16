@@ -60,7 +60,8 @@ class FilmControllerTest {
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
                 148,
-                "https://example.com/inception.jpg"
+                "https://example.com/inception.jpg",
+                "This film is about ..."
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -93,7 +94,8 @@ class FilmControllerTest {
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
                 148,
-                "https://example.com/inception.jpg"
+                "https://example.com/inception.jpg",
+                "This film is about ..."
         );
         filmsRepository.save(film);
         // when + then
@@ -117,7 +119,8 @@ class FilmControllerTest {
     void getFilmById_existingId_returnsFilm() throws Exception {
 
         Film film = new Film("123", "Inception", LocalDate.of(2010,7,16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg",
+                "This film is about ...");
         filmsRepository.save(film);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/films/{id}", "123"))
@@ -136,7 +139,8 @@ class FilmControllerTest {
     void updateFilm_existingId_returnsUpdatedFilm() throws Exception {
         // given
         Film film = new Film("123", "Inception", LocalDate.of(2010,7,16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg",
+                "This film is about ...");
         filmsRepository.save(film);
 
         FilmDTO updatedFilmDTO = new FilmDTO(
@@ -146,7 +150,8 @@ class FilmControllerTest {
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
                 150,
-                "https://example.com/inception_updated.jpg"
+                "https://example.com/inception_updated.jpg",
+                "This film is about ..."
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -175,7 +180,8 @@ class FilmControllerTest {
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
                 150,
-                "https://example.com/inception_updated.jpg"
+                "https://example.com/inception_updated.jpg",
+                "This film is about ..."
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -198,7 +204,8 @@ class FilmControllerTest {
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
                 148,
-                "https://example.com/inception.jpg"
+                "https://example.com/inception.jpg",
+                "This film is about ..."
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -221,7 +228,8 @@ class FilmControllerTest {
                 "Leonardo DiCaprio",
                 GENRE.SCI_FI,
                 148,
-                "https://example.com/inception.jpg"
+                "https://example.com/inception.jpg",
+                "This film is about ..."
         );
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -246,9 +254,11 @@ class FilmControllerTest {
     void getFilms_whenFilmsExist_returnsFilmList() throws Exception {
         // given
         Film film1 = new Film("1", "Inception", LocalDate.of(2010,7,16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg",
+                "This film is about ...");
         Film film2 = new Film("2", "The Dark Knight", LocalDate.of(2008,7,18),
-                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg");
+                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg",
+                "This film is about ...");
         filmsRepository.save(film1);
         filmsRepository.save(film2);
 
@@ -264,9 +274,11 @@ class FilmControllerTest {
     void getFilmsByFilter_withYear_withGenre_withRate_returnsFilteredFilms() throws Exception {
         // given
         Film film1 = new Film("1", "Inception", LocalDate.of(2010,7,16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg",
+                "This film is about ...");
         Film film2 = new Film("2", "The Dark Knight", LocalDate.of(2008,7,18),
-                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg");
+                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg",
+                "This film is about ...");
         filmsRepository.save(film1);
         filmsRepository.save(film2);
 
@@ -294,9 +306,11 @@ class FilmControllerTest {
     void getFilmsByFilter_withNoParams_returnsAllFilms() throws Exception {
         // given
         Film film1 = new Film("1", "Inception", LocalDate.of(2010,7,16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg",
+                "This film is about ...");
         Film film2 = new Film("2", "The Dark Knight", LocalDate.of(2008,7,18),
-                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg");
+                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg",
+                "This film is about ...");
         filmsRepository.save(film1);
         filmsRepository.save(film2);
 
@@ -310,9 +324,11 @@ class FilmControllerTest {
     void getFilmsByFilter_withNoMatchingFilms_returnsEmptyList() throws Exception {
         // given
         Film film1 = new Film("1", "Inception", LocalDate.of(2010,7,16),
-                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg");
+                8.8, "Leonardo DiCaprio", GENRE.SCI_FI, 148, "https://example.com/inception.jpg",
+                "This film is about ...");
         Film film2 = new Film("2", "The Dark Knight", LocalDate.of(2008,7,18),
-                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg");
+                9.0, "Christian Bale", GENRE.ACTION, 152, "https://example.com/dark_knight.jpg",
+                "This film is about ...");
         filmsRepository.save(film1);
         filmsRepository.save(film2);
 
@@ -384,11 +400,14 @@ class FilmControllerTest {
     void getHomepageImages_returnsImageUrls() throws Exception {
         // given
         Film film1 = new Film("1", "Recent Movie 1", LocalDate.now().minusDays(10),
-                7.5, "Actor 1", GENRE.DRAMA, 120, "https://example.com/recent1.jpg");
+                7.5, "Actor 1", GENRE.DRAMA, 120, "https://example.com/recent1.jpg",
+                "This film is about ...");
         Film film2 = new Film("2", "Recent Movie 2", LocalDate.now().plusDays(10),
-                8.0, "Actor 2", GENRE.COMEDY, 110, "https://example.com/recent2.jpg");
+                8.0, "Actor 2", GENRE.COMEDY, 110, "https://example.com/recent2.jpg",
+                "This film is about ...");
         Film film3 = new Film("3", "Old Movie", LocalDate.now().minusMonths(3),
-                6.5, "Actor 3", GENRE.HORROR, 130, "https://example.com/old.jpg");
+                6.5, "Actor 3", GENRE.HORROR, 130, "https://example.com/old.jpg",
+                "This film is about ...");
 
         filmsRepository.save(film1);
         filmsRepository.save(film2);
@@ -406,9 +425,11 @@ class FilmControllerTest {
     void getHomepageImages_whenNoRecentFilms_returnsEmptyList() throws Exception {
         // given
         Film oldFilm1 = new Film("1", "Old Movie 1", LocalDate.now().minusMonths(3),
-                6.5, "Actor 1", GENRE.DRAMA, 120, "https://example.com/old1.jpg");
+                6.5, "Actor 1", GENRE.DRAMA, 120, "https://example.com/old1.jpg",
+                "This film is about ...");
         Film oldFilm2 = new Film("2", "Old Movie 2", LocalDate.now().minusMonths(4),
-                7.0, "Actor 2", GENRE.COMEDY, 110, "https://example.com/old2.jpg");
+                7.0, "Actor 2", GENRE.COMEDY, 110, "https://example.com/old2.jpg",
+                "This film is about ...");
         filmsRepository.save(oldFilm1);
         filmsRepository.save(oldFilm2);
 
