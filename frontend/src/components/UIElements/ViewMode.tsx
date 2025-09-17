@@ -49,7 +49,7 @@ export default function ViewMode({film}: Readonly<ViewModeProps>) {
                 <strong>Duration:</strong> {film.duration ? `${film.duration} min` : "-"}
             </p>
             <p>
-                <strong>Description:</strong> {film.description ? `${film.description} min` : "No description"}
+                <strong>Description:</strong> {film.description || "No description"}
             </p>
 
             <div className="flex justify-end gap-2 mt-4">

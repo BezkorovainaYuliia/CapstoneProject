@@ -102,27 +102,27 @@ function App() {
                     {/* Dashboard */}
                     <Route path="/" element={
                         <ProtectedRoute user={user}>
-                            <Carousel images={carouselImages} />
+                            <Carousel images={carouselImages}/>
                         </ProtectedRoute>
-                    } />
+                    }/>
 
                     <Route path="/films" element={
                         <ProtectedRoute user={user}>
-                            <Dashboard />
+                            <Dashboard/>
                         </ProtectedRoute>
-                    } />
+                    }/>
 
                     {/* Add Film */}
                     <Route path="/films/add" element={
                         <ProtectedRoute user={user}>
-                            <AddFilm />
+                            <AddFilm/>
                         </ProtectedRoute>
-                    } />
+                    }/>
 
                     {/* Edit Film */}
                     <Route path="/films/edit/:id" element={
                         <ProtectedRoute user={user}>
-                            <EditFilm />
+                            <EditFilm/>
                         </ProtectedRoute>
                     } />
                     {/* View Film */}
