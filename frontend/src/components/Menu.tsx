@@ -2,6 +2,9 @@ import { useNavigate } from "react-router-dom";
 import "./Menu.css";
 import VideoCamIcon from "./icons/VideoCamIcon.tsx";
 import LogoutIcon from "./icons/LogoutIcon.tsx";
+import PlusIcon from "./icons/PlusIcon.tsx";
+import HomeIcon from "./icons/HomeIcon.tsx";
+import ListIcon from "./icons/ListIcon.tsx";
 
 interface NaviBarProps {
     user: string | null;
@@ -21,19 +24,20 @@ export default function Menu({ user, onUserChange }: Readonly<NaviBarProps>) {
     }
 
     const links = [
-        { path: "/", label: "Home", auth: false },
-        { path: "/films", label: "Films", auth: true },
-        { path: "/films/add", label: "Add Films", auth: true},
-        { path: "/calendar", label: "Calendar", auth: true  },
+        { path: "/", label: <HomeIcon />, auth: false },
+        { path: "/films", label: <ListIcon />, auth: true },
+        { path: "/films/add", label: <PlusIcon />, auth: true},
     ];
 
     return (
-        <nav className="navbar">
-            {/* Logo */}
+        <nav className="navbar flex items-center justify-between">
+            {/* Left: Logo + Links */}
             <div className="flex items-center space-x-8">
-                <VideoCamIcon/>
+                {/* Logo */}
+                <VideoCamIcon />
+
                 {/* Links */}
-                <div className="nav-links">
+                <div className="flex space-x-6">
                     {links.map((link) =>
                         link.auth && !user ? null : (
                             <button
@@ -46,28 +50,25 @@ export default function Menu({ user, onUserChange }: Readonly<NaviBarProps>) {
                         )
                     )}
                 </div>
-            {/* Правий блок: користувач або логін */}
-            <div>
-                {user && (
-
-                    <div className="flex items-center space-x-4">
-                        <span>Welcome, {user}
-                            <img
-                                src="https://i.pravatar.cc/40"
-                                alt={user ?? "User avatar"}
-                                className="w-8 h-8 rounded-full"
-                            />
-                        </span>
-                        <button
-                            onClick={logout}
-                            className="logout-button"
-                        >
-                            <LogoutIcon/>
-                        </button>
-                    </div>
-                ) }
             </div>
+
+            {/* Right: User and Logout */}
+            <div className="flex items-center space-x-4">
+                {user && (
+                    <>
+                        <span>Welcome, {user}</span>
+                        <img
+                            src="https://i.pravatar.cc/40"
+                            alt={user}
+                            className="w-8 h-8 rounded-full"
+                        />
+                        <button onClick={logout} className="logout-button">
+                            <LogoutIcon />
+                        </button>
+                    </>
+                )}
             </div>
         </nav>
     );
+
 }

@@ -62,7 +62,7 @@ export default function Dashboard() {
         <div className="text-3xl font-bold text-center">
             <h1 className="text-2xl font-bold mb-4">Films</h1>
 
-            {/* Фільтри */}
+            {/* Filters */}
             <div className="flex justify-center gap-4 mb-6 flex-wrap">
                 <input
                     type="text"
@@ -72,7 +72,7 @@ export default function Dashboard() {
                         const val = e.target.value;
                         if (val === "" || isValidYear(val)) setYear(val);
                     }}
-                    className="border rounded px-2 py-1 w-24"
+                    className="sm:text-sm border rounded px-2 py-1 w-24"
                 />
 
                 <select

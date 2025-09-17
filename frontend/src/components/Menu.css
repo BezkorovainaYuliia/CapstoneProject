@@ -6,7 +6,7 @@
 
         @apply md:flex-row justify-between items-center space-y-0 p-4;
 
-        @apply lg:px-8;
+        @apply lg:px-8 justify-between text-lg;
     }
 
     .nav-links {
