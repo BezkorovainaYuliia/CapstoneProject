@@ -1,0 +1,28 @@
+package org.example.backend.model;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.With;
+
+@With
+public record MovieDetails(
+
+        @JsonProperty("Title")
+        String title,
+        @JsonProperty("Year")
+        String year,
+        @JsonProperty("imdbRating")
+        String rated,
+        @JsonProperty("Released")
+        String released,
+        @JsonProperty("Runtime")
+        String runtime,  //duration
+        @JsonProperty("Genre")
+        String genre, //list of genre
+        @JsonProperty("Actors")
+        String actors,
+        @JsonProperty("Plot")
+        String plot,  // description
+        @JsonProperty("Poster")
+        String poster
+) {}
+
