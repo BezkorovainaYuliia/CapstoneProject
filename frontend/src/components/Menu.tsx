@@ -70,5 +70,4 @@ export default function Menu({ user, onUserChange }: Readonly<NaviBarProps>) {
             </div>
         </nav>
     );
-
 }
