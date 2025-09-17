@@ -1,7 +1,7 @@
 package org.example.backend.controller;
 
-import org.example.backend.model.Film;
-import org.example.backend.model.FilmDTO;
+import org.example.backend.model.*;
+import org.example.backend.service.ClientApiService;
 import org.example.backend.service.FilmsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +14,12 @@ import java.util.List;
 public class FilmController {
 
     private final FilmsService filmsService;
+    private final ClientApiService clientApiService;
 
-    public FilmController(FilmsService filmsService) {
+    public FilmController(FilmsService filmsService,
+                          ClientApiService clientApiService) {
         this.filmsService = filmsService;
+        this.clientApiService = clientApiService;
     }
 
     @GetMapping("/films")
@@ -60,6 +63,18 @@ public class FilmController {
     public ResponseEntity<List<String>> getHomepageImages() {
         List<String> images = filmsService.getHomepageImages();
         return ResponseEntity.ok(images);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<SearchResponse> getListOfInfo(@RequestParam String title) {
+        SearchResponse response = clientApiService.getListOfChosenFilmByName(title);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search/{imdbID}")
+    public ResponseEntity<FilmDTO> getFilmByImdbID(@PathVariable String imdbID) {
+        FilmDTO filmFromClientApi = clientApiService.getMovieById(imdbID);
+        return ResponseEntity.ok(filmFromClientApi);
     }
 
 }

@@ -6,19 +6,32 @@ import org.example.backend.model.Film;
 import org.example.backend.model.FilmDTO;
 import org.example.backend.model.GENRE;
 import org.example.backend.repository.FilmsRepository;
+import org.example.backend.service.ClientApiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureMockRestServiceServer;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,6 +50,11 @@ class FilmControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private FilmsRepository filmsRepository;
+
+    @Autowired
+    private MockRestServiceServer mockRestServiceServer;
+    @Autowired
+    private ClientApiService clientApiService;
 
 
     @BeforeEach
@@ -446,5 +464,210 @@ class FilmControllerTest {
                 .andExpect(content().json("[]"));
     }
 
+    @Test
+    void getFilmsByTitleFromApiClient() throws Exception {
+        mockRestServiceServer
+                .expect(requestTo("?apikey=key&type=movie&s=Matrix"))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withSuccess("""
+                    {
+                        "Search": [
+                            {
+                                "Title": "The Matrix",
+                                "Year": "1999",
+                                "imdbID": "tt0133093",
+                                "Type": "movie",
+                                "Poster": "https://m.media-amazon.com/images/M/MV5BN2NmN2VhMTQtMDNiOS00NDlhLTliMjgtODE2ZTY0ODQyNDRhXkEyXkFqcGc@._V1_SX300.jpg"
+                            },
+                            {
+                                "Title": "The Matrix Reloaded",
+                                "Year": "2003",
+                                "imdbID": "tt0234215",
+                                "Type": "movie",
+                                "Poster": "https://m.media-amazon.com/images/M/MV5BNjAxYjkxNjktYTU0YS00NjFhLWIyMDEtMzEzMTJjMzRkMzQ1XkEyXkFqcGc@._V1_SX300.jpg"
+                            }
+                        ],
+                        "totalResults": "137",
+                        "Response": "True"
+                    }
+                    """, MediaType.APPLICATION_JSON));
 
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/search")
+                        .param("title", "Matrix"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().json("""
+                    {
+                        "Search": [
+                            {
+                                "Title": "The Matrix",
+                                "Year": "1999",
+                                "imdbID": "tt0133093",
+                                "Type": "movie",
+                                "Poster": "https://m.media-amazon.com/images/M/MV5BN2NmN2VhMTQtMDNiOS00NDlhLTliMjgtODE2ZTY0ODQyNDRhXkEyXkFqcGc@._V1_SX300.jpg"
+                            },
+                            {
+                                "Title": "The Matrix Reloaded",
+                                "Year": "2003",
+                                "imdbID": "tt0234215",
+                                "Type": "movie",
+                                "Poster": "https://m.media-amazon.com/images/M/MV5BNjAxYjkxNjktYTU0YS00NjFhLWIyMDEtMzEzMTJjMzRkMzQ1XkEyXkFqcGc@._V1_SX300.jpg"
+                            }
+                        ],
+                        "totalResults": "137",
+                        "Response": "True"
+                    }
+                    """));
+    }
+
+    @Test
+    void getFilmsByTitleFromApiClient_whenNoFilm_returnsEmptyList() throws Exception {
+
+        mockRestServiceServer
+                .expect(requestTo("?apikey=key&type=movie&s=NonExistingMovie"))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withSuccess("""
+                    {
+                        "Response": "False",
+                        "Error": "Movie not found!"
+                    }
+                    """, MediaType.APPLICATION_JSON));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/search")
+                        .param("title", "NonExistingMovie"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.Search").isEmpty());
+    }
+
+    @Test
+    void getFilmsByIdFromApiClient_whenFilm_returnsFilms() throws Exception {
+        String imdbID = "tt0133093";
+        mockRestServiceServer
+                .expect(requestTo("?apikey=key&i=tt0133093"))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withSuccess("""
+                        {
+                            "Title": "The Matrix",
+                            "Year": "1999",
+                            "Released": "31 Mar 1999",
+                            "Runtime": "136 min",
+                            "Genre": "Action, Sci-Fi",
+                            "Actors": "Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss",
+                            "Plot": "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence.",
+                            "Poster": "https://m.media-amazon.com/images/M/MV5BN2NmN2VhMTQtMDNiOS00NDlhLTliMjgtODE2ZTY0ODQyNDRhXkEyXkFqcGc@._V1_SX300.jpg",
+                            "imdbRating": "8.7",
+                            "imdbID": "tt0133093",
+                            "Type": "movie"
+                        }
+    """, MediaType.APPLICATION_JSON));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/search/{imdbID}", imdbID)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("The Matrix"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.releaseDate").value("31-03-1999"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value("ACTION"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.duration").value("136"));
+
+    }
+
+    @Test
+    void getFilmsByIdFromApiClient_whenDurationIsWrong_returnsFilm() throws Exception {
+        String imdbID = "tt0133093";
+        mockRestServiceServer
+                .expect(requestTo("?apikey=key&i=tt0133093"))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withSuccess("""
+                        {
+                            "Title": "The Matrix",
+                            "Year": "1999",
+                            "Released": "31 Mar 1999",
+                            "Runtime": "N/A",
+                            "Genre": "Action, Sci-Fi",
+                            "Actors": "Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss",
+                            "Plot": "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence.",
+                            "Poster": "https://m.media-amazon.com/images/M/MV5BN2NmN2VhMTQtMDNiOS00NDlhLTliMjgtODE2ZTY0ODQyNDRhXkEyXkFqcGc@._V1_SX300.jpg",
+                            "imdbRating": "8.7",
+                            "imdbID": "tt0133093",
+                            "Type": "movie"
+                                         }
+    """, MediaType.APPLICATION_JSON));
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/search/{imdbID}", imdbID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("The Matrix"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.releaseDate").value("31-03-1999"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.duration").value("0"));
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "\"Genre\": \"Doc, SciFi\",",
+            "\"Genre\": \"\",",
+            ""
+    })
+    void getFilmsByIdFromApiClient_whenGenreInvalidOrMissing_returnsFilmWithoutGenre(String genreField) throws Exception {
+        String imdbID = "tt0133093";
+
+        String response = """
+            {
+                "Title": "The Matrix",
+                "Year": "1999",
+                %s
+                "Released": "31 Mar 1999",
+                "Actors": "Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss",
+                "Plot": "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence.",
+                "Poster": "https://m.media-amazon.com/images/M/MV5BN2NmN2VhMTQtMDNiOS00NDlhLTliMjgtODE2ZTY0ODQyNDRhXkEyXkFqcGc@._V1_SX300.jpg",
+                "imdbRating": "8.7",
+                "imdbID": "tt0133093",
+                "Type": "movie"
+            }
+            """.formatted(genreField);
+
+        mockRestServiceServer
+                .expect(requestTo("?apikey=key&i=tt0133093"))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withSuccess(response, MediaType.APPLICATION_JSON));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/search/{imdbID}", imdbID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("The Matrix"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.genre").doesNotExist());
+    }
+
+    @Test
+    void getFilmsByIdFromApiClient_whenReleasedIsWrong_throwsException() {
+        String imdbID = "tt0133093";
+        mockRestServiceServer
+                .expect(requestTo("?apikey=key&i=tt0133093"))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withSuccess("{ \"Released\": \"N/A\" }", MediaType.APPLICATION_JSON));
+
+        assertThrows(DateTimeParseException.class,
+                () -> clientApiService.getMovieById(imdbID));
+    }
+
+    @Test
+    void getFilmsByIdFromApiClient_whenReleasedIsNull_throwsException() {
+        String imdbID = "tt0133093";
+        mockRestServiceServer
+                .expect(requestTo("?apikey=key&i=tt0133093"))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withSuccess("{ \"Released\": \"\" }", MediaType.APPLICATION_JSON));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> clientApiService.getMovieById(imdbID));
+    }
+
+    @Test
+    void getFilmsByIdFromApiClient_whenReleasedIsEmpty_throwsException() {
+        String imdbID = "tt0133093";
+        mockRestServiceServer
+                .expect(requestTo("?apikey=key&i=tt0133093"))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withSuccess("{ }", MediaType.APPLICATION_JSON));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> clientApiService.getMovieById(imdbID));
+    }
 }
