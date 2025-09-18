@@ -11,7 +11,7 @@ public record MovieDetails(
         @JsonProperty("Year")
         String year,
         @JsonProperty("imdbRating")
-        String rated,
+        String imdbRating,
         @JsonProperty("Released")
         String released,
         @JsonProperty("Runtime")

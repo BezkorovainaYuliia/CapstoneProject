@@ -13,21 +13,21 @@ import java.util.Locale;
 @Service
 public class ClientApiService {
     private final RestClient restClient;
-    @Value("${apikey}")
-    private String apiKey2;
-    @Value("${baseUri}")
-    private String baseUri2;
+    private final String apiKey;
 
-    public ClientApiService(RestClient.Builder restClientBuilder) {
-        this.restClient = restClientBuilder
-                .baseUrl(baseUri2)
-                .build();
+    public ClientApiService(
+            RestClient.Builder restClientBuilder,
+            @Value("${baseUri}") String baseUri,
+            @Value("${apikey}") String apiKey
+    ) {
+        this.restClient = restClientBuilder.baseUrl(baseUri).build();
+        this.apiKey = apiKey;
     }
 
     public SearchResponse getListOfChosenFilmByName(String title){
         return restClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("apikey", apiKey2)
+                        .queryParam("apikey", apiKey)
                         .queryParam("type", "movie")
                         .queryParam("s", title)
                         .build())
@@ -39,7 +39,7 @@ public class ClientApiService {
 
         MovieDetails movieDetails = restClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("apikey", apiKey2)
+                        .queryParam("apikey", apiKey)
                         .queryParam("i", imdbId)
                         .build())
                 .retrieve()
@@ -52,11 +52,12 @@ public class ClientApiService {
             LocalDate releaseDate = parseReleased(movieDetails.released());
             //convert to GENRE
             GENRE genre = fromString(movieDetails.genre());
-
+            //convert to rated
+        Double rated = safeParseRated(movieDetails.imdbRating());
         return new FilmDTO(
                 movieDetails.title(), //title
                 releaseDate, //releaseDate
-                Double.valueOf(movieDetails.rated()), //rate Double
+                rated, //rate Double
                 movieDetails.actors(), //casts
                 genre, // GENRE enum
                 duration,// duration
@@ -105,4 +106,15 @@ public class ClientApiService {
         }
         return null;
     }
+
+    private static Double safeParseRated(String rating) {
+        try {
+            return rating != null && !rating.equalsIgnoreCase("N/A")
+                    ? Double.parseDouble(rating)
+                    : null;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
 }

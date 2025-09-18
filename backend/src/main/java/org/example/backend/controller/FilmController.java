@@ -68,7 +68,7 @@ public class FilmController {
     @GetMapping("/search")
     public ResponseEntity<SearchResponse> getListOfInfo(@RequestParam String title) {
         SearchResponse response = clientApiService.getListOfChosenFilmByName(title);
-        return ResponseEntity.ok(response);
+                return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search/{imdbID}")
