@@ -52,7 +52,8 @@ public class ClientApiService {
             //convert to GENRE
             GENRE genre = fromString(movieDetails.genre());
             //convert to rated
-        Double rated = safeParseRated(movieDetails.imdbRating());
+            Double rated = safeParseRated(movieDetails.imdbRating());
+
         return new FilmDTO(
                 movieDetails.title(), //title
                 releaseDate, //releaseDate

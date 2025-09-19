@@ -5,7 +5,8 @@ import lombok.With;
 
 @With
 public record MovieDetails(
-
+        @JsonProperty("imdbID")
+        String imdbID,
         @JsonProperty("Title")
         String title,
         @JsonProperty("Year")
