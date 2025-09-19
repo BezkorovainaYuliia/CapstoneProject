@@ -1,4 +1,5 @@
 import {useState} from "react";
+import { NO_IMAGE_POSTER} from "../Types.ts";
 
 type Props = {
     images: { id: string; src: string; alt: string }[];
@@ -22,11 +23,11 @@ export default function Carousel({images}: Readonly<Props>) {
     return (
         <div className="max-w-screen-xl mx-auto mt-6 relative">
             {/* Images */}
-            <div className="relative h-56 md:h-96 overflow-hidden rounded-lg">
+                <div className="relative h-72 md:h-[32rem] overflow-hidden rounded-lg">
                 {images.map((img, i) => (
                     <img
                         key={img.id}
-                        src={img.src}
+                        src={img.src || NO_IMAGE_POSTER}
                         alt={img.alt}
                         className={`absolute w-full h-full object-cover transition-opacity duration-700 ease-in-out 
               ${i === current ? "opacity-100" : "opacity-0"}`}

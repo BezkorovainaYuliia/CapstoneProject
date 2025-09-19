@@ -5,6 +5,7 @@ import LogoutIcon from "./icons/LogoutIcon.tsx";
 import PlusIcon from "./icons/PlusIcon.tsx";
 import HomeIcon from "./icons/HomeIcon.tsx";
 import ListIcon from "./icons/ListIcon.tsx";
+import SearchIcon from "./icons/SearchIcon.tsx";
 
 interface NaviBarProps {
     user: string | null;
@@ -27,6 +28,7 @@ export default function Menu({ user, onUserChange }: Readonly<NaviBarProps>) {
         { path: "/", label: <HomeIcon />, auth: false },
         { path: "/films", label: <ListIcon />, auth: true },
         { path: "/films/add", label: <PlusIcon />, auth: true},
+        { path: "/films/search", label: <SearchIcon />, auth: true},
     ];
 
     return (

@@ -9,6 +9,8 @@ import AddFilm from "./components/AddFilm.tsx";
 import EditFilm from "./components/EditFilm.tsx";
 import ProtectedRoute from "./components/ProtectedRoutes.tsx";
 import ViewFilm from "./components/FilmView.tsx";
+import Search from "./components/Search.tsx";
+import SearchFilmViewMode from "./components/UIElements/SearchFilmViewMode.tsx";
 
 const images = [
     { id: "amazon", src: "https://m.media-amazon.com/images/G/01/AdProductsWebsite/images/campaigns/primeVideo/PV_titleScreens_16Shows._TTW_.jpeg", alt: "Amazon" },
@@ -131,7 +133,17 @@ function App() {
                             <ViewFilm />
                         </ProtectedRoute>
                     } />
-
+                    {/*Search by Api Client*/}
+                    <Route path="/films/search" element={
+                        <ProtectedRoute user={user}>
+                            <Search />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/films/search/:id" element={
+                        <ProtectedRoute user={user}>
+                            <SearchFilmViewMode />
+                        </ProtectedRoute>
+                    } />
                 </Routes>
             </div>
             }
