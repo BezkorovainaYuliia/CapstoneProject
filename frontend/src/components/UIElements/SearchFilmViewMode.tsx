@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import {type Film, NO_IMAGE_POSTER, type FilmDTO} from "../Types.ts";
+import { NO_IMAGE_POSTER, type FilmDTO} from "../Types.ts";
 import SaveIcon from "../icons/SaveIcon.tsx";
 
 export default function SearchFilmViewMode() {
@@ -35,12 +35,12 @@ export default function SearchFilmViewMode() {
     const mapMovieToFilm = (movie: FilmDTO): FilmDTO => {
         return {
             title: movie.title,
-            releaseDate: movie.releaseDate || null,
-            rate: movie.rate || null,
+            releaseDate: movie.releaseDate,
+            rate: movie.rate,
             casts: movie.casts || "",
             genre: movie.genre || "",
-            duration: movie.duration || null,
-            poster: movie.poster !== "N/A" ? movie.poster : null,
+            duration: movie.duration,
+            poster: movie.poster !== "N/A" ? movie.poster : "",
             description: movie.description || "",
         };
     };
@@ -49,7 +49,7 @@ export default function SearchFilmViewMode() {
         if (!movie) return;
         setSaving(true);
         try {
-            const film: Film = mapMovieToFilm(movie);
+            const film: FilmDTO = mapMovieToFilm(movie);
             await axios.post("/api/films", film, { withCredentials: true });
             navigateTo("/films");
         } catch (err) {

@@ -21,9 +21,9 @@ export default function Search() {
                 withCredentials: true,
             });
 
-            if (response.data.Response === "True") {
-                setFilms(response.data.Search);
-                console.log(response.data.Search);
+            if (response.data.response === "True") {
+                setFilms(response.data.search);
+                console.log(response.data.search);
             } else {
                 setFilms([]);
                 setError("Film not found");
@@ -52,7 +52,7 @@ export default function Search() {
         {films.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {films .slice()
-                    .sort((a, b) => Number(b.Year) - Number(a.Year))
+                    .sort((a, b) => Number(b.year) - Number(a.year))
                     .map((film) => (
                         <SearchFilmCard
                             key={film.imdbID}
