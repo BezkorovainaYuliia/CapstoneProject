@@ -45,7 +45,6 @@ public class ClientApiService {
                 .retrieve()
                 .body(MovieDetails.class);
 
-
             //convert to Integer
             Integer duration = safeParseDuration(movieDetails.runtime());
             //convert to LocalDate
