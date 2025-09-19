@@ -1,4 +1,3 @@
-
 import {useNavigate} from "react-router-dom";
 import type {Film} from "../Types.ts";
 import EditIcon from "../icons/EditIcon.tsx";
