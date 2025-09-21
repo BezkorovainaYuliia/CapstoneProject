@@ -25,7 +25,7 @@ export default function AddFilm() {
             .then(() => {
                 navigator("/films");
             })
-            .catch(err => console.error("Error saving film:", err));
+            .catch(err => console.error("Error saving filmFromClientApi:", err));
     };
 
 

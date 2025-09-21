@@ -19,7 +19,7 @@ export default function ViewMode({film}: Readonly<ViewModeProps>) {
             .then(() => {
                 navigateTo("/films");
             })
-            .catch((err) => console.error("Error deleting film:", err));
+            .catch((err) => console.error("Error deleting filmFromClientApi:", err));
     };
 
     return (

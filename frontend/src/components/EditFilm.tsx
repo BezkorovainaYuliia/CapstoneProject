@@ -35,7 +35,7 @@ export default function EditFilm() {
             .then(res => {
                 console.log(res.data);
                 navigate("/films");})
-            .catch(err => console.error("Error updating film:", err));
+            .catch(err => console.error("Error updating filmFromClientApi:", err));
     };
 
     return (
