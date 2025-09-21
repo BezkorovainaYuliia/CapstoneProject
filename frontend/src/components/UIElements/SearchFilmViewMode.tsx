@@ -53,8 +53,8 @@ export default function SearchFilmViewMode() {
             await axios.post("/api/films", film, { withCredentials: true });
             navigateTo("/films");
         } catch (err) {
-            console.error("Error adding film:", err);
-            setError("Error saving film");
+            console.error("Error adding filmFromClientApi:", err);
+            setError("Error saving filmFromClientApi");
         } finally {
             setSaving(false);
         }

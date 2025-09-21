@@ -59,11 +59,6 @@ export default function Menu({ user, onUserChange }: Readonly<NaviBarProps>) {
                 {user && (
                     <>
                         <span>Welcome, {user}</span>
-                        <img
-                            src="https://i.pravatar.cc/40"
-                            alt={user}
-                            className="w-8 h-8 rounded-full"
-                        />
                         <button onClick={logout} className="logout-button">
                             <LogoutIcon />
                         </button>

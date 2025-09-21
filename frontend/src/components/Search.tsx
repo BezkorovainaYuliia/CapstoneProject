@@ -5,7 +5,7 @@ import SearchFilmCard from "./UIElements/SearchFilmCard.tsx";
 
 export default function Search() {
     const [searchFilmByTitle, setSearchFilmByTitle] = useState<string>("");
-    const [films, setFilms] = useState<Movie[]>([]);
+    const [filmsFromClientApi, setFilmsFromClientApi] = useState<Movie[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -21,11 +21,11 @@ export default function Search() {
                 withCredentials: true,
             });
 
-            if (response.data.response === "True") {
-                setFilms(response.data.search);
-                console.log(response.data.search);
+            if (response.data.Response === "True") {
+                setFilmsFromClientApi(response.data.Search);
+                console.log(response.data.Search);
             } else {
-                setFilms([]);
+                setFilmsFromClientApi([]);
                 setError("Film not found");
             }
         } catch (err) {
@@ -49,14 +49,14 @@ export default function Search() {
                 Search </button> </div>
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-600">{error}</p>}
-        {films.length > 0 && (
+        {filmsFromClientApi.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {films .slice()
-                    .sort((a, b) => Number(b.year) - Number(a.year))
+                {filmsFromClientApi .slice()
+                    .sort((a, b) => Number(b.Year) - Number(a.Year))
                     .map((film) => (
                         <SearchFilmCard
                             key={film.imdbID}
-                            film={film} />
+                            filmFromClientApi={film} />
                     ))}
             </div> )}
     </div> );

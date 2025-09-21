@@ -11,17 +11,17 @@ export type Film = {
 }
 
 export type Movie = {
-    title: string;
-    year: string;
+    Title: string;
+    Year: string;
     imdbID: string;
-    type: string;
-    poster: string;
+    Type: string;
+    Poster: string;
 };
 
 export type SearchResponse = {
-    search: Movie[];
+    Search: Movie[];
     totalResults: string;
-    response: string;
+    Response: string;
 };
 
 export type FilmDTO = {
