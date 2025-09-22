@@ -43,7 +43,7 @@ export default function Search() {
                    value={searchFilmByTitle}
                    onChange={(e) => setSearchFilmByTitle(e.target.value)}
                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                   className="flex-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                   className="flex-1 px-3 py-2 border-0 border-b-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             <button onClick={handleSearch}
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" >
                 Search </button> </div>

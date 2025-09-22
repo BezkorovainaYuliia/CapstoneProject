@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import type { Film } from "./Types.ts";
 import FilmCard from "./FilmCard.tsx";
+import FilterIcon from "./icons/FilterIcon.tsx";
+import RedoIcon from "./icons/RedoIcon.tsx";
 
 export default function Dashboard() {
     const [films, setFilms] = useState<Film[]>([]);
@@ -60,7 +62,7 @@ export default function Dashboard() {
 
     return (
         <div className="text-3xl font-bold text-center">
-            <h1 className="text-2xl font-bold mb-4">Films</h1>
+            <h1 className="text-sm font-bold mb-4">Films</h1>
 
             {/* Filters */}
             <div className="flex justify-center gap-4 mb-6 flex-wrap">
@@ -72,13 +74,13 @@ export default function Dashboard() {
                         const val = e.target.value;
                         if (val === "" || isValidYear(val)) setYear(val);
                     }}
-                    className="sm:text-sm border rounded px-2 py-1 w-24"
+                    className="sm:text-sm border-0 border-b-2 border-gray-300 rounded px-2 py-1 w-24"
                 />
 
                 <select
                     value={genre}
                     onChange={(e) => setGenre(e.target.value)}
-                    className="border rounded px-2 py-1"
+                    className="sm:text-sm border-0 border-b-2 border-gray-300 rounded px-2 py-1 w-48"
                 >
                     <option value="">All Genres</option>
                     {genres.map((g) => (
@@ -96,14 +98,14 @@ export default function Dashboard() {
                         const val = e.target.value;
                         if (val === "" || isValidRate(val)) setRate(val);
                     }}
-                    className="border rounded px-2 py-1 w-24"
+                    className="sm:text-sm border-0 border-b-2 border-gray-300 rounded px-2 py-1 w-24"
                 />
 
                 <button
                     onClick={applyFilters}
                     className="bg-blue-500 text-white px-4 py-1 rounded"
                 >
-                    Filter
+                    <FilterIcon />
                 </button>
                 <button
                     onClick={() => {
@@ -114,7 +116,7 @@ export default function Dashboard() {
                     }}
                     className="bg-gray-300 text-black px-4 py-1 rounded"
                 >
-                    Reset
+                    <RedoIcon />
                 </button>
             </div>
 
